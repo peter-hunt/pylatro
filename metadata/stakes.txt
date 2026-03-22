@@ -1,0 +1,23 @@
+White
+Base Difficulty
+
+Red
+Small Blind gives no reward money
+
+Green
+Required score scales faster for each Ante
+
+Black
+30% chance for Jokers in shops or booster packs to have an Eternal sticker (Cannot be sold or destroyed)
+
+Blue
+-1 Discard
+
+Purple
+Required score scales even faster for each Ante
+
+Orange
+30% chance for Jokers in shops or booster packs to have a Perishable sticker (Debuffed after 5 Rounds)
+
+Gold
+30% chance for Jokers in shops or booster packs to have a Rental sticker (Costs $3 per round, can be bought for $1)

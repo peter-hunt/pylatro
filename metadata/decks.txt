@@ -1,0 +1,65 @@
+Red Deck
++1 discard every round
+
+Blue Deck
+Unlock Condition: Discover at least 20 items from your collection
++1 hand every round
+
+Yellow Deck
+Unlock Condition: Discover at least 50 items from your collection
+Start with extra $10
+
+Green Deck
+Unlock Condition: Discover at least 75 items from your collection
+At the end of each Round:
+$2 per remaining Hand
+$1 per remaining Discard
+Earn no Interest
+
+Black Deck
+Unlock Condition: Discover at least 100 items from your collection
++1 Joker slot
+-1 hand every round
+
+Magic Deck
+Unlock Condition: Win a run with the Red Deck on any difficulty
+Start run with the Crystal Ball voucher and 2 copies of The Fool
+
+Nebula Deck
+Unlock Condition: Win a run with the Blue Deck on any difficulty
+Start run with the Telescope voucher
+-1 consumable slot
+
+Ghost Deck
+Unlock Condition: Win a run with the Yellow Deck on any difficulty
+Spectral cards may appear in the shop, start with a Hex card
+
+Abandoned Deck
+Unlock Condition: Win a run with the Green Deck on any difficulty
+Start run with no Face Cards in your deck
+
+Checkered Deck
+Unlock Condition: Win a run with the Black Deck on any difficulty
+Start run with 26 Spades and 26 Hearts in deck
+
+Zodiac Deck
+Unlock Condition: Win a run with any deck on the Red Stake difficulty or harder
+Start run with Tarot Merchant, Planet Merchant, and Overstock
+
+Painted Deck
+Unlock Condition: Win a run with any deck on the Green Stake difficulty or harder
+-2 hand size,
+-1 Joker slot
+
+Anaglyph Deck
+Unlock Condition: Win a run with any deck on the Black Stake difficulty or harder
+After defeating each Boss Blind, gain a Double Tag
+
+Plasma Deck
+Unlock Condition: Win a run with any deck on the Blue Stake difficulty or harder
+Balance Chips and Mult when calculating score for played hand
+x2 base Blind size
+
+Erratic Deck
+Unlock Condition: Win a run with any deck on the Orange Stake difficulty or harder
+All Ranks and Suits in deck are randomized

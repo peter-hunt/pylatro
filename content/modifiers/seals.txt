@@ -1,0 +1,4 @@
+gold
+red
+blue
+purple

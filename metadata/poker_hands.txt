@@ -1,0 +1,38 @@
+High Card
+When no other hand is possible, scores whichever played card is the highest rank.
+
+Pair
+Two cards with a matching rank. Suits may be different.
+
+Two Pair
+Two cards with a matching rank and two cards with a different matching rank. Suits may be different.
+
+Three of a Kind
+Three cards with a matching rank. Suits may be different.
+
+Straight
+Five cards with ranks that are in consecutive order. Suits may be different. Aces can be counted as high (A K Q J 10) or low (A 2 3 4 5), but not at the same time (K A 2 3 4 is not valid).
+
+Flush
+Five cards of any rank that all share the same unit.
+
+Full House
+Three cards with a matching rank and two cards with a different matching rank, with cards from at least two or more suits.
+
+Four of a Kind
+Four cards with a matching rank. Suits may be different.
+
+Straight Flush
+Five cards in consecutive order that all share the same suit.
+
+Five of a Kind
+Secret
+Five cards with the same rank which are not all the same unit.
+
+Flush House
+Secret
+Three cards with the same rank, and two cards with the same rank, all from a single suit.
+
+Flush Five
+Secret
+Five cards with the same rank and same unit.

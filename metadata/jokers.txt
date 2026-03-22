@@ -1,0 +1,553 @@
+Joker
++4 Mult
+
+Greedy Joker
+Played cards with Diamond suit give +3 Mult when scored
+
+Lusty Joker
+Played cards with Heart suit give +3 Mult when scored
+
+Wrathful Joker
+Played cards with Spade suit give +3 Mult when scored
+
+Gluttonous Joker
+Played cards with Club suit give +3 Mult when scored
+
+Jolly Joker
++8 Mult if played hand contains a Pair
+
+Zany Joker
++12 Mult if played hand contains a Three of a Kind
+
+Mad Joker
++10 Mult if played hand contains a Two Pair
+
+Crazy Joker
++12 Mult if played hand contains a Straight
+
+Droll Joker
++10 Mult if played hand contains a Flush
+
+Sly Joker
++50 Chips if played hand contains a Pair
+
+Wily Joker
++100 Chips if played hand contains a Three of a Kind
+
+Clever Joker
++80 Chips if played hand contains a Two Pair
+
+Devious Joker
++100 Chips if played hand contains a Straight
+
+Crafty Joker
++80 Chips if played hand contains a Flush
+
+Half Joker
++20 Mult if played hand contains 3 or fewer cards
+
+Joker Stencil
+x1 Mult for each empty Joker slot
+Joker Stencil included
+(Currently x[Current Mult=1])
+
+Four Fingers
+All Flushes and Straights can be made with 4 cards
+
+Mime
+Retrigger all card held in hand abilities
+
+Credit Card
+Go up to -$20 in debt
+
+Ceremonial Dagger
+When Blind is selected, destroy Joker to the right and permanently add double its sell value to this Mult
+(Currently +[Current Mult=0] Mult)
+
+Banner
++30 Chips for each remaining discard
+
+Mystic Summit
++15 Mult when 0 discards remaining
+
+Marble Joker
+Adds one Stone card to the deck when Blind is selected
+
+Loyalty Card
+x4 Mult every 6 hands played
+[Remaining Round=5] Remaining
+
+8 Ball
+1 in 4 chance for each played 8 to create a Tarot card when scored
+(Must have room)
+
+Misprint
++0-23 Mult
+
+Dusk
+Retrigger all played cards in final hand of the round
+
+Raised Fist
+Adds double the rank of lowest ranked card held in hand to Mult
+
+Chaos the Clown
+1 free Reroll per shop
+
+Fibonacci
+Each played Ace, 2, 3, 5, or 8 gives +8 Mult when scored
+
+Steel Joker
+Gives x0.2 Mult for each Steel Card in your full deck
+(Currently x[Current Mult=1] Mult)
+
+Scary Face
+Played face cards give +30 Chips when scored
+
+Abstract Joker
++3 Mult for each Joker card
+(Currently +[Current Mult=0] Mult)
+
+Delayed Gratification
+Earn $2 per discard if no discards are used by end of the round
+
+Hack
+Retrigger each played 2, 3, 4, or 5
+
+Pareidolia
+All cards are considered face cards
+
+Gros Michel
++15 Mult
+1 in 6 chance this is destroyed at the end of the round
+
+Even Steven
+Played cards with even rank gives +4 Mult when scored
+(10, 8, 6, 4, 2)
+
+Odd Todd
+Played carsd with odd rank gives +31 Chips when scored
+(A, 9, 7, 5, 3)
+
+Scholar
+Played Aces give +20 Chips and +4 Mult when scored
+
+Business Card
+Played face cards have a 1 in 2 chance to give $2 when scored
+
+Supernova
+Adds the number of times poker hand has been played this run to Mult
+
+Ride the Bus
+This Joker gains +1 Mult per consecutive hand played without a scoring face card
+(Currently +[Current Mult=0] Mult)
+
+Space Joker
+1 in 4 chance to upgrade level of played poker hand
+
+Egg
+Gains $3 of sell value at end of round
+
+Burglar
+When Blind is selected, gain +3 Hands and lose all discards
+
+Blackboard
+x3 Mult if all cards held in hand are Spades or Clubs
+
+Runner
+Gains +15 Chips if played hand contains a Straight
+(Currently +[Current Chips=0] Chips)
+
+Ice Cream
++[Current Chips=100] Chips
+-5 Chips for every hand played
+
+DNA
+if first hand of round has only 1 card, add a permanent copy to deck and draw it to hand
+
+Splash
+Every played card counts in scoring
+
+Blue Joker
++2 Chips for each remaining card in deck
+(Currently +[Current Chips=104?] Chips)
+
+Sixth Sense
+If first hand of round is a single 6, destroy it and create a Spectral card
+(Must have room)
+
+Constellation
+This Joker gains x0.1 Mult every time a Planet card is used
+(Currently x[Current Mult=1] Mult)
+
+Hiker
+Every played card permanently gains +5 Chips when scored
+
+Faceless Joker
+Earn $5 if 3 or more face cards are discarded at the same time
+
+Green Joker
++1 Mult per hand played
+-1 Mult per discard
+(Currently +[Current Mult=0] Mult)
+
+Superposition
+Create a Tarot card if poker hand contains an Ace and a Straight
+(Must have room)
+
+To Do List
+Earn $4 if poker hand is a [Poker Hand], poker hand changes at end of round
+
+Cavendish
+x3 Mult
+1 in 1000 chance this card is destroyed at the end of round
+
+Card Sharp
+x3 Mult if played poker hand has already been played this round
+
+Red Card
+The Joker gains +3 Mult when any Booster Pack is skipping
+(Currently +[Current Mult=0] Mult)
+
+Madness
+When Small Blind or Big Blind is selected, gain x0.5 Mult and destroy a random Joker
+(Currently x[Current Mult=1] Mult)
+
+Square Joker
+This Joker gains +4 Chips if played hand has exactly 4 cards
+(Currently [Current Chips=0] Chips)
+
+Séance
+If poker hand is a Straight Flush, create a random Spectral card
+(Must have room)
+
+Riff-Raff
+When Blind is selected, create 2 Common Jokers
+(Must have room)
+
+Vampire
+This Joker gains x0.1 Mult per scoring Enhanced card played, removes card Enhancement
+(Currently x[Current Mult=1] Mult)
+
+Shortcut
+Allows Straights to be made with gaps of 1 rank
+(ex: 10 8 6 5 3)
+
+Hologram
+This Joker gains x0.25 Mult every time a playing card is added to your deck
+(Currently x[Current Mult] Mult)
+
+Vagabond
+Create a Tarot card if hand is played with $4 of less
+
+Baron
+Each King held in hand gives x1.5 Mult
+
+Cloud 9
+Earn $1 for each 9 in your full deck at end of round
+(Current $[Number])
+
+Rocket
+Earn $1 at end of round. Payment increases by $2 when Boss Blind is defeated
+
+Obelisk
+This Joker gains x0.2 Mult per consecutive hand played without played your most played poker hand
+(Currently x[Current Mult=1] Mult)
+
+Midas Mask
+All played face cards become Gold cards when scored
+
+Luchador
+Sell this card to disable the current Boss Blind
+
+Photograph
+First played face card give x2 Mult when scored
+
+Gift Card
+Add $1 of sell value to every Joker and Consumable card at end of round
+
+Turtle Bean
++[Hand Size=5] hand size, reduces by 1 each round
+
+Erosion
++4 Mult for each card below [Starting Size=52?] in your full deck
+(Currently +[Current Mult=0?] Mult)
+
+Reserved Parking
+Each face card held in hand has a 1 in 2 chance to give $1
+
+Mail-In Rebate
+Each $5 for each discard [Rank], rank changes every round
+
+To the Moon
+Earn an extra $1 of interest for every $5 you have at end of round
+
+Hallucination
+1 in 2 chance to create Tarot card when any Booster Pack is opened
+(Must have room)
+
+Fortune Teller
++1 Mult per Tarot card used this run
+(Currently +[Current Mult=0])
+
+Juggler
++1 hand size
+
+Drunkard
++1 discard each round
+
+Stone Joker
+Gives +25 Chips for each Stone Card in your full deck
+(Currently +[Current Chips=0] Chips)
+
+Golden Joker
+Earn $4 at end of round
+
+Lucky Cat
+This Joker gains x0.25 Mult every time a Lucky card successfully triggers
+(Currently X[Current Mult=1] Mult)
+
+Baseball Card
+Uncommon Jokers each give x1.5 Mult
+
+Bull
++2 Cihps for each $1 you hvae
+(Current +[Current Chips=0] Chips)
+
+Diet Cola
+Sell this card to create a free Double Tag
+
+Trading Card
+If first discard of round has only 1 card, destroy it and earn $3
+
+Flash Card
+This Joker gains +2 Mult per reroll in the shop
+(Currently +[Current Mult=0] Mult)
+
+Popcorn
++[Current Mult=20] Mult
+-4 Mult per round played
+
+Spare Trousers
+This Joker gains +2 Mult if played hand contains a Two Pair
+(Currently +[Current Mult=0] Mult)
+
+Ancient Joker
+Each played card with [Suit] gives x1.5 Mult when scored,
+suit changes at end of round
+
+Ramen
+x[Current Mult=2], loses x0.01 Mult per card discarded
+
+Walkie Talkie
+Each played 10 or 4 gives +10 Chips and +4 Mult when scored
+
+Seltzer
+Retrigger all cards played for the next 10 hands
+
+Castle
+This Joker gains +3 Chips per discards [Suit] card, suit changes every round
+(Currently +[Current Chips=0] Chips)
+
+Smiley Face
+Played face cards give +5 Mult when scored
+
+Campfire
+This Joker gains x0.25 Mult for each card sold, resets when Boss Blind is defeated
+(Currently x[Current Mult=1] Mult)
+
+Golden Ticket
+Unlock Requirement: Play a 5 card hand that contains only Gold cards
+Played Gold cards earn $4 when scored
+
+Mr. Bones
+Unlock Requirement: Lose 5 runs
+Prevents Death if chips scored are at least 25% of required chips
+self destructs
+
+Acrobat
+Unlock Requirement: Play 200 hands
+x3 Mult on final hand of round
+
+Sock and Buskin
+Unlock Requirement: Play a total of 300 face cards
+Retrigger all played face cards
+
+Swashbuckler
+Unlock Requirement: Sell a total of 20 Joker cards
+(Currently +[Current Chips=0] Chips)
+
+Troubadour
+Unlock Requirement: Win 5 consecutive rounds by playing only 1 hand
++2 hand size,
+-1 hand each round
+
+Certificate
+Unlock Requirement: Have a Gold playing card with a Gold Seal
+When round begins, add a random playing card with a random seal to your hand
+
+Smeared joker
+Unlock Requirement: Have at least 3 Wild Card in your deck
+Hearts and Diamonds count as the same suit, Spades and Clubs count as the same suit
+
+Throwback
+Unlock Requirement: Continue a saved run from the main menu
+x0.25 Mult for each Blind skipped this run
+(Currently x[Current Mult=1] Mult)
+
+Hanging Chad
+Unlock Requirement: Beat a Boss Blind with a High Card
+Retrigger first played card used in scoring 2 additional times
+
+Rough Gem
+Unlock Requirement: Have at least 30 cards with Diamond suit in your deck
+Played cards with Diamond suit earn $1 when scored
+
+Bloodstone
+Unlock Requirement: Have at least 30 cards with Heart suit in your deck
+1 in 2 chance for played cards with Heart suit to give x1.5 Mult when scored
+
+Arrowhead
+Unlock Requirement: Have at least 30 cards with Spade suit in your deck
+Played cards with Spade suit gives +50 Chips when scored
+
+Onyx Agate
+Unlock Requirement: Have at least 30 cards with Club suit in your deck
+Played cards with Club suit give +7 Mult when scored
+
+Glass Joker
+Unlock Requirement: Have at least 5 Glass Cards in your deck
+This Joker gains x0.75 Mult for every Glass Card that is destroyed
+(Currently x[Current Mult=1] Mult)
+
+Showman
+Unlock Requirement: Reach Ante level 4
+Joker, Tarot, Planet, and Spectral cards may appear multiple times
+
+Flower Pot
+Unlock Requirement: Reach Ante level 8
+x3 Mult if poker hand contains a Diamond card, Club card, Heart card, and Spade card
+
+Blueprint
+Unlock Requirement: Win a run
+Copies ability of Joker to the right
+
+Wee Joker
+Unlock Requirement: Win a run in 18 or fewer rounds
+This Joker gains +8 Chips when each played 2 is scored
+(Currently +[Current Chips=0] Chips)
+
+Merry Andy
+Unlock Requirement: Win a run in 12 or fewer rounds
++3 discards each round,
+-1 hand size
+
+Oops! All 6s
+Unlock Requirement: In one hand, earn at least 10,000 chips
+Doubles all listed probabilities
+(ex: 1 in 3 > 2 in 3)
+
+The Idol
+Unlock Requirement: In one hand, earn at least 1,000,000 chips
+Each played [Rank] of [Suit] gives x2 Mult when scored
+Card changes every round
+
+Seeing Double
+Unlock Requirement: Play a hand that contains four 7 of Clubs
+x2 Mult if played hand has a scoring Club card and a scoring card of any other suit
+
+Matador
+Unlock Requirement: Defeat a Boss Blind in 1 hand without using any discards
+Earn $8 if played hand triggers the Boss Blind ability
+
+Hit the Road
+Unlock Requirement: Discard 5 Jacks at the same time
+This Joker gains x0.5 Mult for every Jack discarded this round
+(Currently x1 Mult)
+
+The Duo
+Unlock Requirement: Win a run without playing a Pair
+x2 Mult if played hand contains a Pair
+
+The Trio
+Unlock Requirement: Win a run without playing a Three of a Kind
+x3 Mult if played hand contains a Three of a Kind
+
+The Family
+Unlock Requirement: Win a run without playing a Four of a Kind
+x4 Mult if played hand contains a Four of a Kind
+
+The Order
+Unlock Requirement: Win a run without playing a Straight
+x3 Mult if played hand contains a Straight
+
+The Tribe
+Unlock Requirement: Win a run without playing a Flush
+x2 Mult if played hand contains a Flush
+
+Stuntman
+Unlock Requirement: Earn at least 100 million (100,000,000) Chips in a single hand
++250 Chips,
+-2 hand size
+
+Invisible Joker
+Unlock Requirement: Win a run without ever having more than 4 Jokers
+After 2 rounds, sell this card to Duplicate a random Joker
+(Currently [Current Rounds]/2)
+(Removes Negative from copy)
+
+Brainstorm
+Unlock Requirement: Discard a Royal Flush
+Copies the ability of leftmost Joker
+
+Satellite
+Unlock Requirement: Have at least $400
+Earn $1 at end of round per unique Planet card used this run
+
+Shoot the Moon
+Unlock Requirement: Play every Heart card in your deck in one round
+Each Queen held in hand gives +13 Mult
+
+Driver's License
+Unlock Requirement: Enhance 16 cards in your deck
+x3 Mult if you have at least 16 Enhanced cards in your full deck
+(Currently [Enhanced Cards])
+
+Cartomancer
+Unlock Requirement: Discover every Tarot card
+Create a Tarot card when Blind is selected
+(Must have room)
+
+Astronomer
+Unlock Requirement: Discover every Planet chainedard
+All Planet cards and Celestial Packs in the shop are free
+
+Burnt Joker
+Unlock Requirement: Sell 50 cards
+Upgrade the level of the first discarded poker hand each round
+
+Bootstraps
+Unlock Requirement: Have at least 2 Polychrome Jokers at the same time
++2 Mult for every $5 you have
+(Currently +[Current Mult=0] Mult)
+
+Canio
+Unlock Requirement: Find this Joker from the Soul card
+This Joker gains x1 Mult when a face card is desetroyed
+(Currently x[Current Mult=1] Mult)
+
+Triboulet
+Unlock Requirement: Find this Joker from the Soul card
+Played Kings and Queens each give x2 Mult when scored
+
+Yorick
+Unlock Requirement: Find this Joker from the Soul card
+This Joker gains x1 Mult every 23 ([Cards Discarded=23]) cards discarded
+(Currently x[Current Mult=1] Mult)
+
+Chicot
+Unlock Requirement: Find this Joker from the Soul card
+Disable effect of every Boss Blind
+
+Perkeo
+Unlock Requirement: Find this Joker from the Soul card
+Creates a Negative copy of 1 random consumable card in your possession at the end of the shop

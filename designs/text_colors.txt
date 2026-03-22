@@ -1,0 +1,48 @@
+Red & Mult ("+1" discard, "+4" Mult)
+#FE5F55FF
+Blue & Chips ("+1" hand, "+50" chips)
+#009DFFFF
+Green ("1 in 6" chance)
+#4BC292FF
+Money (Earn "$4)
+#F3B958FF
+Gold (Android)
+#EAC058FF
+Attention ("+1" hand size)
+#FF9A00FF
+Purple ("Purple Seal")
+#8867A5FF
+White ("Joker")
+#FFFFFFFF
+Inactive ("(Must have room)")
+#88888899
+Spades
+#403995FF/#4F31B9FF
+Hearts
+#F03464FF/#F83B2FFF
+Clubs
+#235955FF/#008EE6FF
+Diamonds
+#F06B3FFF/#E29000FF
+Tarot
+#A782D1FF
+Planet
+#13AFCEFF
+Spectral
+#4584FAFF
+Edition (YOU WIN!)
+#E5D7ECFF
+Dark Edition (Negative)
+#9999CCFF
+Common
+#009DFFFF
+Uncommon
+#4BC292FF
+Rare
+#FE5F55FF
+Legendary
+#B26CBBFF
+Enhanced (Enhancement)
+#8389DDFF
+Default (Joker)
+#4F6367FF

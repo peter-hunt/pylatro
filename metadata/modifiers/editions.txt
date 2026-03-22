@@ -1,0 +1,14 @@
+Base
+No extra effects
+
+Foil
++50 Chips when scored
+
+Holographic
++10 Mult when scored
+
+Polychrome
+x1.5 Mult when scored
+
+Negative
++1 Joker slot

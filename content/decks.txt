@@ -1,0 +1,15 @@
+red default
+blue default
+yellow default
+green default
+black default
+magic default
+nebula default
+ghost default
+abandoned abandoned
+checkered checkered
+zodiac default
+painted default
+anaglyph default
+plasma default
+erratic erratic

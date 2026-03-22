@@ -1,0 +1,123 @@
+# Profile [Profile Name] COMPLETED
+123
+P1 P2 P3 as default names
+Load Profile
+Delete Profile
+Wins: [wins]
+Create Profile
+Current Profile
+Reset Profile
+Unlock All
+EMPTY
+Enter Name
+
+# Progress ?%
+Collection ?% (?/340) 0% at 2/340
+Challenges ?% (?/20)
+Joker Stickers ?% (?/1200)
+Deck Stake Wins ?% (?/120)
+
+# Play COMPLETED
+New Run
+
+Continue (grayed out if unavailable)
+
+[Deck Name]
+(colons centered and aligned)
+Round : ?
+Ante : ?
+Money : $?
+Best Hand: ?
+
+Challenges
+Win a run with at least
+5 different decks to unlock
+Challenge Mode
+0/5
+
+# Options COMPLETED
+## Settings COMPLETED
+Play/Discard Button Position
+Discard/Play, Play/Discard
+Display Stake Stickers during Run
+
+## Stats COMPLETED
+(Left Column)
+Best Hand [Chip] ?
+Highest Round ?
+Highest Ante ?
+Most Played Hand [Hand] ([Times])
+Most Money $?
+Best Win Streak [Best] ([Current])
+(Right Column)
+Progress ?%
+Challenges ?% (?/20)
+Joker Stickers ?% (?/1200)
+Deck Stake Wins ?% (?/120)
+### Card Stats (Top 10s)
+Jokers
+Total completed rounds with this card
+Consumables
+Number of times this card has been used
+Tarots
+Number of times this card has been used
+Planets
+Number of times this card has been used
+Spectrals
+Number of times this card has been used
+Vouchers
+Number of times this Voucher has been redeemed
+
+## Customize Deck (useless in CLI) COMPLETED
+## Credits COMPLETED
+## Back COMPLETED
+
+# Quit COMPLETED
+
+# Collection COMPLETED
+Jokers ?/150
+Decks ?/15
+Vouchers ?/32
+Consumables
+Tarot Cards ?/22
+Planet Cards ?/12
+(Usually classed as Planet)
+(Pluto, Ceres, and Eris showing as Dwarf Planet)
+(Planet X showing as Planet?)
+Spectral Cards ?/18
+Enhanced Cards (always shown)
+Seals (always shown)
+Editions ?/5
+Booster Packs ?/32
+Tags ?/24
+Blinds ?/30
+
+## Undiscovered Items
+### Joker (and Tarot+Planet+Spectral)
+Not Discovered
+Purchase or use this card in an unseeded run to learn what it does
+Locked
+[Unlock Requirement] ([Optional Progress Number])
+Locked (Legendary)
+?????
+### Deck
+Locked
+[Unlock Requirement]
+### Voucher
+Not Discovered
+Redeem this voucher in an unseeded run to learn what it does
+Locked
+[Unlock Requirement]
+### Edition
+Not Discovered
+Find this edition in an unseeded run to learn what it does
+### Booster Pack
+Not Discovered
+Open this pack in an unseeded run to learn what it does
+### Tag
+Not Discovered
+Use this tag in an unseeded run to learn what it does
+### Blind
+Not Discovered
+Defeat this blind to discover it
+

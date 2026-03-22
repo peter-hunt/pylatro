@@ -1,0 +1,24 @@
+Arcana Pack
+Choose 1 of 3 Tarot Cards to be used immediately.
+Choose 1 of 5 Tarot Cards to be used immediately.
+Choose 2 of 5 Tarot Cards to be used immediately.
+
+Celestial Pack
+Choose 1 of 3 Planet Cards to be used immediately.
+Choose 1 of 5 Planet Cards to be used immediately.
+Choose 2 of 5 Planet Cards to be used immediately.
+
+Standard Pack
+Choose 1 of 3 Playing Cards to be used immediately.
+Choose 1 of 5 Playing Cards to be used immediately.
+Choose 2 of 5 Playing Cards to be used immediately.
+
+Buffoon Pack
+Choose 1 of 2 Joker Cards.
+Choose 1 of 4 Joker Cards.
+Choose 2 of 4 Joker Cards.
+
+Spectral Pack
+Choose 1 of 2 Spectral Cards to be used immediately.
+Choose 1 of 4 Spectral Cards to be used immediately.
+Choose 2 of 4 Spectral Cards to be used immediately.

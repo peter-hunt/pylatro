@@ -1,0 +1,33 @@
+Eternal
+Can't be sold or destroyed
+
+Perishable
+Debuffed after 5 rounds
+ ([Rounds Left=5] remaining)
+
+Rental
+Lose $3 at end of round
+
+White
+Use this Joker to win on White Stake difficulty
+
+Red
+Use this Joker to win on Red Stake difficulty
+
+Green
+Use this Joker to win on Green Stake difficulty
+
+Black
+Use this Joker to win on Black Stake difficulty
+
+Blue
+Use this Joker to win on Blue Stake difficulty
+
+Purple
+Use this Joker to win on Purple Stake difficulty
+
+Orange
+Use this Joker to win on Orange Stake difficulty
+
+Gold
+Use this Joker to win on Gold Stake difficulty

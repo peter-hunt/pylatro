@@ -1,0 +1,8 @@
+bonus
+multi
+wild
+glass
+steel
+stone
+gold
+lucky

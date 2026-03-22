@@ -1,0 +1,68 @@
+The Hook
+Discards 2 random cards held in hand after every played hand
+
+The Ox
+Playing the most played hand this run sets money to $0
+
+The House
+First hand is drawn face down
+
+The Wall
+Extra large blind
+
+The Wheel
+1 in 7 cards get drawn face down during the round
+
+The Arm
+Decrease level of played poker hand by 1
+
+The Club
+All Club cards are debuffed
+
+The Fish
+Cards drawn face down after each hand played
+
+The Psychic
+Must play 5 cards
+
+The Goad
+All Spade cards are debuffed
+
+The Water
+Start with 0 discards
+
+The Window
+All Diamond cards are debuffed
+
+The Manacle
+-1 Hand Size
+
+The Eye
+No repeat hand types this round
+
+The Mouth
+Only one hand type can be played this round
+
+The Plant
+All face cards are debuffed
+
+The Serpent
+After Play or Discard, always draw 3 cards
+
+The Pillar
+Cards played previously this Ante are debuffed
+
+The Needle
+Play only 1 hand
+
+The Head
+All Heart cards are debuffed
+
+The Tooth
+Lose $1 per card played
+
+The Flint
+Base Chips and Mult for played poker hands rae halved for the entire round
+
+The Mark
+All face cards are drawn face down

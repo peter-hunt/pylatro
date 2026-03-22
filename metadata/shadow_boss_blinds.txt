@@ -1,0 +1,14 @@
+Amber Acorn
+Flips and shuffles all Joker cards
+
+Verdant Leaf
+All cards debuffed until 1 Joker sold
+
+Violet Vessel
+Very large blind
+
+Crimson Heart
+One random Joker disabled every hand
+
+Cerulean Bell
+Forces 1 card to always be selected

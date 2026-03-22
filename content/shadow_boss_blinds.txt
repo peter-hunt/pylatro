@@ -1,0 +1,5 @@
+amber_acorn 8 2 8
+verdant_leaf 8 2 8
+violet_vessel 8 2 8
+crimson_heart 8 6 8
+cerulean_bell 8 2 8

@@ -1,0 +1,27 @@
+Bonus
+Enhanced card gives an additional +30 Chips when scored
+
+Multi
+Enhanced card gives +4 Mult when scored
+
+Wild
+Enhanced card is considered to be every suit simultaneously
+
+Glass
+Enhanced card gives x2 Mult when scored
+1 in 4 chance to destroy card after scoring is finished
+
+Steel
+Enhanced card gives x1.5 Mult while held in hand
+
+Stone
+Enhanced card's value is set to +50 Chips
+Enhanced card has no rank or suit
+Enhanced card always scores
+
+Gold
+Enhanced card gives $3 if held in hand at end of round
+
+Lucky
+Enhanced card has a 1 in 5 chance to give +20 Mult
+Enhanced card has a 1 in 15 chance to give $20

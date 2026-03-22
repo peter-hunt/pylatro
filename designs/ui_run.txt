@@ -1,0 +1,178 @@
+# Side Bar
+
+## Constant
+
+(Top Left) [Blind Name]
+[Optional Boss Blind Ability]
+(Left Column)
+[Blind Icon]
+(Right Column)
+Score at least
+[Chip] ?
+Reward: $$$
+
+(Left) Round score [Chip] 0
+(Blue Back) [Chips] x (Red Back) [Mult]
+(Left Column)
+(Red) Run Info
+(Yellow) Options
+(Right Column)
+Hands (Blue) [Hands]
+Discards (Red) [Discards]
+$(-)[Money]
+Ante (Gold)?(White)/8
+Round (Gold)?
+
+## Shop
+
+(Top Left)
+Choose your
+next Blind
+
+(Optional with voucher)
+Reroll Boss
+$10
+
+(Top Left) SHOP
+Improve your run!
+
+# Run Info
+
+## Poker Hands
+
+lvl.1 (tab) High Card (tab) (blue) 5 (red) x 1 (tab) # 0
+1 white
+2 blue
+20-22 purple
+
+## Blinds
+
+Defeated/Upcoming
+Small Blind/Big Blind/Boss Blind Name
+[Blind Icon]
+[Optional Boss Blind Ability]
+Score at least [Chip Icon] ?
+(Reward $$$+)
+or
+[Tag Icon] Skip Reward
+
+## Vouchers
+
+Vouchers redeemed this run
+
+## Stake
+
+[Stake Icon] Black Stake
+[Stake Ability Description]
+
+Also applied
+[Color] [Description]
+(in decreasing order, white bottom)
+
+# Choosing Blind
+
+(Yellow) Select/(Gray) Upcoming
+
+Small Blind/Big Blind/Boss Blind Name
+
+(Chicot hides Boss Blind Ability)
+
+[Icon]
+
+Score at least
+
+[Chip] ?
+Reward: $$$+/$$$$+/$$$$$+
+
+or
+
+[Tag Icon] Skip Blind
+
+# Deck Info
+
+(Bottom Right) 52/52
+
+(Deck Color) View Deck
+
+Remaining/Full Deck
+
+(Left Column)
+[Deck Name]
+[Deck Ability Description]
+
+Base Cards/Effective (Blue)
+Aces, Face Cards, Numbered Cards
+Spades, Hearts
+Clubs, Diamonds
+
+(Blue Icon) Effective total due to Jokers, Blinds, and card enhancements
+
+A-Number ~ 2-Number
+
+(Right Side)
+List of Deck
+
+# Round End
+
+(Gold Cards Held are added before round end cash out)
+Cash Out: $?
+[Blind Icon] Score at least [Chip] ? $$$
+[Blind Icon] Saved by Mr. Bones
+...................................... (38)
+[Hands] Remaining Hands \($1 each\) $
+{Golden Joker} $ (Order in Joker order)
+{Delayed Gratification} $
+{Cloud 9} $
+[Interest] 1 interest per $[5?] \([5?] max\) $
+
+# Game End
+
+Game Over/YOU WIN!
+
+Best Hand [Chip]?
+Most Played Hand [Poker Hand] ([Number])
+(Left Column)
+Cards Played ?
+Cards Discarded ?
+Cards Purchased ?
+Times Rerolled ?
+New Discoveries ?
+Seed ?
+(Right Column)
+Ante ?
+Round ?
+(Lost)
+Defeated By [Blind Name]
+(Won)
+New Run
+Main Menu
+(Bottom if Won)
+Endless Mode
+
+# Trigger
+
+Gros Michel, Cavendish
+Safe!
+Extinct!
+
+Popcorn, Turtle Bean, Ramen
+Eaten!
+
+Ice Cream
+Melted!
+
+Seltzer
+Drank!
+
+[Voucher]
+[Voucher Icon]
+Redeemed!
+
++$? (Money)
+$3 (Gold Card Held)
++1 (Ante)
++3 (Chip)
++10 Mult (Mult)
+x1.5 Mult (Mult)
+Again! (Sock and Buskin)
+Reset (Ride the Bus)

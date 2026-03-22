@@ -1,0 +1,11 @@
+eternal
+perishable
+rental
+white
+red
+green
+black
+blue
+purple
+orange
+gold

@@ -1,0 +1,77 @@
+Boss Tag
+Rerolls the Boss Blind
+
+Buffoon Tag
+Gives a free Mega Buffoon Pack
+
+Charm Tag
+Gives a free Mega Arcana Pack
+
+Coupon Tag
+Initial cards and booster packs in next shop are free
+
+D6 Tag
+Rerolls in next shop start at $0
+
+Double Tag
+Gives a copy of the next selected Tag
+Double Tag excluded
+
+Economy Tag
+Doubles your money
+(Max of $40)
+
+Ethereal Tag
+Gives a free Spectral Pack
+
+Foil Tag
+Next base edition shop Joker is free and becomes Foil
+
+Garbage Tag
+Gives $1 per unused discard this run
+(Will give $[Profit=0])
+
+Handy Tag
+Gives $1 per played hand this run
+(Will give $[Profit=0])
+
+Holographic Tag
+Next base edition shop Joker is free and becomes Holographic
+
+Investment Tag
+Gain $25 after defeating the next Boss Blind
+
+Juggle Tag
++3 hand size next round
+
+Meteor Tag
+Gives a free Mega Celestial Pack
+
+Negative Tag
+Next base edition shop Joker is free and becomes Negative
+
+Orbital Tag
+Upgrade [Poker Hand] by 3 levels
+
+Polychrome Tag
+Next base edition shop Joker is free and becomes Polychrome
+
+Rare Tag
+Shop has a free Rare Joker
+
+Speed Tag
+Gives $5 per skipped Blind this run
+(Will give $[Profit=5])
+
+Standard Tag
+Gives a free Mega Stnadard Pack
+
+Top-up Tag
+Create up to 2 Common Jokers
+(Must have room)
+
+Uncommon Tag
+Shop has a free Uncommon Joker
+
+Voucher Tag
+Adds one Voucher to the next shop

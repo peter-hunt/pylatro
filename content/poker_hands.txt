@@ -1,0 +1,12 @@
+high_card 5 1
+pair 10 2
+two_pair 20 2
+three_of_a_kind 30 3
+straight 30 4
+flush 35 4
+full_house 40 4
+four_of_a_kind 60 7
+straight_flush 100 8
+five_of_a_kind 120 12
+flush_house 140 14
+flush_five 160 16

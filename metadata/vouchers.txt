@@ -1,0 +1,113 @@
+Overstock
++1 card slot available in shop (to 3 slots)
+
+Overstock Plus
+Unlock Condition: Spend a total of $2500 at the shop
++1 card slot available in shop (to 4 slots)
+
+Clearance Sale
+All cards and packs in shop are 25% off
+
+Liquidation
+Unlock Condition: Redeem at least 10 Voucher cards in one run
+All cards and packs in shop are 50% off
+
+Hone
+Foil, Holographic, and Polychrome cards appear 2x more often
+
+Glow Up
+Unlock Condition: Have at least 5 Joker cards with Foil, Holographic, or Polychrome (or Negative) effect
+Foil, Holographic, and Polychrome cards appear 4x more often
+
+Reroll Surplus
+Rerolls cost $2 less
+
+Reroll Glut
+Unlock Condition: Reroll the shop a total of 100 times
+Rerolls cost an additional $2 less
+
+Crystal Ball
++1 consumable slot
+
+Omen Globe
+Unlock Condition: Use a total of 25 Tarot cards from booster packs
+Spectral cards may appear in any of the Arcana Packs
+
+Telescope
+Celestial Packs always contain the Planet card for your most played poker hand
+
+Observatory
+Unlock Condition: Use a total of 25 Planet cards from booster packs
+Planet cards in your consumable area give x1.5 Mult for their specified poker hand
+
+Grabber
+Permanently gain +1 hand per round
+
+Nacho Tong
+Unlock Condition: Play a total of 2500 cards
+Permanently gain an additional +1 hand per round
+
+Wasteful
+Permanently gain +1 discard each round
+
+Recyclomancy
+Unlock Condition: Discard a total of 2500 cards
+Permanently gain an additional +1 discard each round
+
+Tarot Merchant
+Tarot cards appear 2x more frequently in the shop
+
+Tarot Tycoon
+Unlock Condition: Buy a total of 50 Tarot cards from the shop
+Tarot cards appear 4x more frequently in the shop
+
+Planet Merchant
+Planet cards appear 2x more frequently in the shop
+
+Planet Tycoon
+Unlock Condition: Buy a total of 50 Planet cards from the shop
+Planet cards appear 4x more frequently in the shop
+
+Seed Money
+Raise the cap on interest earned in each round to $10
+
+Money Tree
+Unlock Condition: Max out the interest per round earnings for ten consecutive rounds
+Raise the cap on interest earned in each round to $20
+
+Blank
+Does nothing?
+
+Antimatter
+Unlock Condition: Redeem Blank 10 total times
++1 Joker slot
+
+Magic Trick
+Playing cards can be purchased from the shop
+
+Illusion
+Unlock Condition: Buy a total of 20 Playing cards from the shop
+Playing cards in shop may have an Enhancement, Edition, and/or a Seal
+
+Hieroglyph
+-1 Ante,
+-1 hand each round
+
+Petroglyph
+Unlock Condition: Reach Ante level 12
+-1 Ante again,
+-1 discard each round
+
+Director's Cut
+Reroll Boss Blind 1 time per Ante, $10 per roll
+
+Retcon
+Unlock Condition: Discover 25 Blinds
+Reroll Boss Blind unlimited times, $10 per roll
+
+Paint Brush
++1 hand size
+
+Palette
+Unlock Condition: Reduce your hand size down to 5 cards
++1 hand size again

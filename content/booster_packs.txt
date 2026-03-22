@@ -1,0 +1,5 @@
+arcana
+celestial
+standard
+buffoon
+spectral
