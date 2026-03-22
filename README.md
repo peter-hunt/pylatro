@@ -99,6 +99,38 @@ Pylatro is a learning project that reconstructs the core mechanical and data str
 - Save/profile persistence framework
 - Type system via reusable `DataType` framework
 
+## Save Data Structure
+
+Pylatro stores persistent data in the `saves/` directory at project root:
+
+```
+saves/
+├── app_state.json         # Global application settings and session state
+│   ├── version            # Format version ("1.0")
+│   ├── game_speed         # User preference: slow | normal | fast
+│   ├── animations_enabled # Boolean: render animations
+│   ├── color_enabled      # Boolean: use color in CLI output
+│   ├── last_profile_loaded # String: name of last active profile (e.g., "P1")
+│   ├── last_menu_position  # String: main menu, play selection, etc.
+│   └── total_playtime_seconds # Integer: cumulative playtime
+│
+└── profiles/              # Player profile directory
+    ├── P1.json            # Profile slot 1 (default naming)
+    │   ├── name           # Profile name (can be renamed, e.g., "My Deck")
+    │   ├── stats          # ProfileStats: runs, earnings, card history
+    │   └── unlocks        # UnlockState: jokers, decks, etc.
+    ├── P2.json            # Profile slot 2
+    ├── P3.json            # Profile slot 3
+    └── [additional].json  # Additional profiles beyond 3 default slots
+```
+
+### Design Notes
+
+- **app_state.json** stores global settings and session state, not profile-specific data
+- **Profiles** are stored as separate JSON files, one per profile
+- **3-Slot System**: Mirrors Balatro's design with P1, P2, P3 as default slots, allowing renames but maintaining slot ordering. Users can create additional profiles beyond the 3 slots.
+- **Profile Operations Supported**: Create, rename, delete, reset, unlock all, switch active profile
+
 🔄 **In Progress:**
 - Basic CLI interface structure
 - Game loop and turn mechanics

@@ -10,11 +10,10 @@ This module is responsible for getting the application into a ready state
 before the main game loop begins.
 """
 
-from pylatro.persistence.profiles import ProfileStats
 from pylatro.persistence.app_state import AppState, load_app_state, save_app_state
+from pylatro.persistence.profiles import ProfileManager
 from pathlib import Path
 import sys
-import json
 import logging
 
 # Add src directory to path for imports
@@ -26,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 # Paths
 ROOT_DIR = Path(__file__).parent
-SAVES_DIR = ROOT_DIR / "saves"
+SAVES_DIR = ROOT_DIR / "saves"  # Root-level saves: app_state.json, profiles/
+# Player profiles (P1.json, P2.json, etc.)
 PROFILES_DIR = SAVES_DIR / "profiles"
 
 # Content data directory - resolved from the installed package
@@ -36,6 +36,21 @@ try:
 except ImportError:
     # Fallback if import fails
     DATA_DIR = ROOT_DIR / "src" / "pylatro" / "content" / "data"
+
+# Global profile manager
+_profile_manager = None
+
+
+def get_profile_manager() -> ProfileManager:
+    """Get the global profile manager instance.
+
+    Returns:
+        ProfileManager: Profile manager initialized with PROFILES_DIR.
+    """
+    global _profile_manager
+    if _profile_manager is None:
+        _profile_manager = ProfileManager(PROFILES_DIR)
+    return _profile_manager
 
 
 def init_directories():
@@ -79,6 +94,11 @@ def init_app_state():
         raise
 
 
+# ============================================================================
+# Profile Management API (delegates to ProfileManager)
+# ============================================================================
+
+
 def check_profile_exists(profile_name: str) -> bool:
     """Check if a player profile exists.
 
@@ -88,8 +108,7 @@ def check_profile_exists(profile_name: str) -> bool:
     Returns:
         bool: True if profile file exists, False otherwise.
     """
-    profile_path = PROFILES_DIR / f"{profile_name}.json"
-    return profile_path.exists()
+    return get_profile_manager().exists(profile_name)
 
 
 def load_profile(profile_name: str) -> dict | None:
@@ -101,20 +120,7 @@ def load_profile(profile_name: str) -> dict | None:
     Returns:
         dict: Profile data if found, None otherwise.
     """
-    profile_path = PROFILES_DIR / f"{profile_name}.json"
-
-    if not profile_path.exists():
-        logger.warning(f"Profile not found: {profile_name}")
-        return None
-
-    try:
-        with open(profile_path, 'r') as f:
-            data = json.load(f)
-        logger.info(f"Profile loaded: {profile_name}")
-        return data
-    except Exception as e:
-        logger.error(f"Failed to load profile {profile_name}: {e}")
-        return None
+    return get_profile_manager().load(profile_name)
 
 
 def create_profile(profile_name: str) -> bool:
@@ -126,27 +132,69 @@ def create_profile(profile_name: str) -> bool:
     Returns:
         bool: True if profile created successfully, False otherwise.
     """
-    if check_profile_exists(profile_name):
-        logger.warning(f"Profile already exists: {profile_name}")
-        return False
+    return get_profile_manager().create(profile_name)
 
-    try:
-        # Create profile with default stats
-        default_stats = ProfileStats()
-        profile_data = {
-            "name": profile_name,
-            "stats": default_stats.dumps(),
-        }
 
-        profile_path = PROFILES_DIR / f"{profile_name}.json"
-        with open(profile_path, 'w') as f:
-            json.dump(profile_data, f, indent=2)
+def save_profile(profile_name: str, profile_data: dict) -> bool:
+    """Save a profile to disk.
 
-        logger.info(f"Profile created: {profile_name}")
-        return True
-    except Exception as e:
-        logger.error(f"Failed to create profile {profile_name}: {e}")
-        return False
+    Args:
+        profile_name: Name of the profile.
+        profile_data: Profile data dictionary to save.
+
+    Returns:
+        bool: True if saved successfully, False otherwise.
+    """
+    return get_profile_manager().save(profile_name, profile_data)
+
+
+def delete_profile(profile_name: str) -> bool:
+    """Delete a player profile.
+
+    Args:
+        profile_name: Name of the profile to delete.
+
+    Returns:
+        bool: True if deleted successfully, False if profile doesn't exist.
+    """
+    return get_profile_manager().delete(profile_name)
+
+
+def rename_profile(old_name: str, new_name: str) -> bool:
+    """Rename a player profile.
+
+    Args:
+        old_name: Current profile name.
+        new_name: New profile name.
+
+    Returns:
+        bool: True if renamed successfully, False otherwise.
+    """
+    return get_profile_manager().rename(old_name, new_name)
+
+
+def reset_profile(profile_name: str) -> bool:
+    """Reset a profile's stats to default values (but keep unlocks).
+
+    Args:
+        profile_name: Name of the profile to reset.
+
+    Returns:
+        bool: True if reset successfully, False if profile doesn't exist.
+    """
+    return get_profile_manager().reset(profile_name)
+
+
+def unlock_all(profile_name: str) -> bool:
+    """Unlock all jokers and decks for a profile.
+
+    Args:
+        profile_name: Name of the profile.
+
+    Returns:
+        bool: True if unlocked successfully, False if profile doesn't exist.
+    """
+    return get_profile_manager().unlock_all(profile_name)
 
 
 def list_profiles() -> list[str]:
@@ -155,12 +203,7 @@ def list_profiles() -> list[str]:
     Returns:
         list[str]: List of profile names (without .json extension).
     """
-    if not PROFILES_DIR.exists():
-        return []
-
-    profiles = [f.stem for f in PROFILES_DIR.glob("*.json")]
-    logger.debug(f"Found {len(profiles)} profiles")
-    return sorted(profiles)
+    return get_profile_manager().list_all()
 
 
 def get_app_settings() -> dict:
@@ -262,9 +305,9 @@ def init_application() -> bool:
 
     Performs all startup tasks in order:
     1. Creates required directories
-    2. Initializes application settings
-    3. Verifies game data
-    4. Loads any cached profile references
+    2. Initializes application settings and saves to app_state.json
+    3. Creates default P1.json profile if no profiles exist
+    4. Verifies game data
 
     Returns:
         bool: True if all initialization steps succeeded, False otherwise.
@@ -283,22 +326,37 @@ def init_application() -> bool:
         logger.error("Directory initialization failed")
         return False
 
-    # Step 2: Load app state
+    # Step 2: Load app state and save to disk
     try:
         app_state = init_app_state()
+        # Always save app state to ensure it exists on disk
+        save_app_state(app_state)
+        logger.info("App state initialized and saved")
     except Exception as e:
         logger.error(f"App state initialization failed: {e}")
         return False
 
-    # Step 3: Verify game data
+    # Step 3: Create default P1 profile if no profiles exist
+    profiles = list_profiles()
+    if not profiles:
+        logger.info("No profiles found, creating default P1...")
+        if create_profile("P1"):
+            logger.info("Default profile P1 created")
+            app_state.last_profile_loaded = "P1"
+            save_app_state(app_state)
+        else:
+            logger.error("Failed to create default P1 profile")
+            return False
+
+    # Step 4: Verify game data
     if not verify_game_data():
         logger.warning(
             "Game data verification failed (may still be recoverable)")
 
-    # Step 4: Log initialization status
+    # Step 5: Log initialization status
     profiles = list_profiles()
     logger.info(
-        f"Initialization complete. Found {len(profiles)} existing profiles")
+        f"Initialization complete. Found {len(profiles)} profiles")
 
     return True
 

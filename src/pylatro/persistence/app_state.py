@@ -20,8 +20,9 @@ class AppState(DataType):
 
 
 def _get_app_state_path():
-    """Get the path to app_state.json"""
-    return Path(__file__).parent.parent / "saves" / "app_state.json"
+    """Get the path to app_state.json at project root /saves/app_state.json."""
+    # Navigate from src/pylatro/persistence/app_state.py to project root
+    return Path(__file__).parent.parent.parent.parent / "saves" / "app_state.json"
 
 
 # Global cache
@@ -36,7 +37,7 @@ def load_app_state():
     if path.exists():
         with open(path) as f:
             data = json.load(f)
-            _app_state = AppState.load(data)
+            _app_state = AppState.loads(data)
     else:
         _app_state = AppState()
 
@@ -57,7 +58,7 @@ def save_app_state(state: AppState = None):
     path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(path, 'w') as f:
-        json.dump(_app_state.dump(), f, indent=2)
+        json.dump(_app_state.dumps(), f, indent=2)
 
 
 def get_app_state():
