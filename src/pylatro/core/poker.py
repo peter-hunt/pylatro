@@ -22,11 +22,10 @@ def straight_test(sorted_ranks: Iterable[int], length: int, strict: bool):
     return (is_strictly_straight if strict else is_loosely_straight)(sorted_ranks, length)
 
 
-# ! not tested yet
 # ? a straight flush with four fingers with one card not included
 # ? either with suit or rank on either side, that card is not scored
-def find_hand(*cards: PlayingCard, four_fingers: bool = False,
-              shortcut: bool = False, smeared: bool = False) -> tuple[str, tuple[bool]]:
+def analyze_poker_hand(*cards: PlayingCard, four_fingers: bool = False,
+                       shortcut: bool = False, smeared: bool = False) -> tuple[str, tuple[bool]]:
     """Detect poker hand from given cards.
 
     Args:
@@ -55,7 +54,7 @@ def find_hand(*cards: PlayingCard, four_fingers: bool = False,
                     for rank in {*ranks}), key=lambda pair: pair[0], reverse=True)
     crank = [pair[0] for pair in cprank]
 
-    is_flush = csuit[0] + four_fingers
+    is_flush = csuit[0] + four_fingers >= 5
     flush_map = None
 
     if is_flush:

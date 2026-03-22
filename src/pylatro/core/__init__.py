@@ -5,7 +5,7 @@ from pylatro.core.models import (
     PlayingCard, Joker, Deck, Consumable, Voucher, Tag
 )
 from pylatro.core.run import Run, RunStats
-from pylatro.core.poker import find_hand
+from pylatro.core.poker import analyze_poker_hand
 
 __all__ = [
     # Models
@@ -14,5 +14,5 @@ __all__ = [
     # State
     "Run", "RunStats",
     # Logic
-    "find_hand",
+    "analyze_poker_hand",
 ]

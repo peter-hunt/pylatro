@@ -1,5 +1,5 @@
 __pycache__
 .vscode
-profiles/*
+saves/profiles/*
 app_state.json
 *.egg-info
