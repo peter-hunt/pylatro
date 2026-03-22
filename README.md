@@ -17,9 +17,10 @@
   - [Installation](#installation)
     - [Requirements](#requirements)
     - [Setup](#setup)
+    - [Running Examples](#running-examples)
     - [Current Capabilities](#current-capabilities)
   - [Project Architecture](#project-architecture)
-    - [Module Overview](#module-overview)
+    - [Directory Structure](#directory-structure)
     - [Data Flow](#data-flow)
     - [Core Data Structures](#core-data-structures)
   - [Game Data \& Objects](#game-data--objects)
@@ -42,6 +43,7 @@
     - [Project Documentation](#project-documentation)
   - [Support](#support)
   - [Disclaimer](#disclaimer)
+  - [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -116,8 +118,8 @@ Pylatro is a learning project that reconstructs the core mechanical and data str
 
 ### Requirements
 
-- Python 3.9+
-- Dependencies listed in `requirements.txt`
+- Python 3.12+
+- Dependencies are managed in `pyproject.toml`
 
 ### Setup
 
@@ -127,19 +129,33 @@ Pylatro is a learning project that reconstructs the core mechanical and data str
    cd pylatro
    ```
 
-2. Install dependencies:
+2. Install the project in development mode:
    ```bash
-   pip install -r requirements.txt
+   pip install -e .
    ```
 
-3. (Optional) Use a virtual environment for larger projects:
+   This installs Pylatro as an editable package, making all modules importable from anywhere.
+
+3. (Optional) Use a virtual environment:
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # macOS/Linux
    # or
    venv\Scripts\activate  # Windows
-   pip install -r requirements.txt
+   pip install -e .
    ```
+
+### Running Examples
+
+After installation, you can run example scripts:
+
+```bash
+# Run game entities example
+python -m examples.game_entities
+
+# Run DataType framework example
+python -m examples.datatype_usage
+```
 
 ### Current Capabilities
 
@@ -154,33 +170,49 @@ The project currently supports:
 
 ## Project Architecture
 
-### Module Overview
+Pylatro uses a **src layout**, which is the modern Python packaging standard. This provides better separation between the package code and project files.
+
+### Directory Structure
 
 ```
 pylatro/
-├── cli/              # User interface and input handling
-│   ├── main.py       # CLI entry point
-│   ├── context.py    # CLI state and context
-│   ├── renderer.py   # UI rendering logic
-│   ├── layouts.py    # Screen layouts and display
-│   └── input_handler.py  # Input processing
-├── core/             # Game mechanics and models
-│   ├── models.py     # Core data types (Card, Joker, Blind, etc.)
-│   ├── poker.py      # Poker hand evaluation
-│   └── run.py        # Run/campaign progression logic
-├── content/          # Game content and data management
-│   ├── loader.py     # Data file loading
-│   ├── repository.py # Content storage and access
-│   ├── metadata.py   # Metadata management
-│   └── data/         # Game content files (JSON/text)
-├── persistence/      # Save state and profiles
-│   ├── app_state.py  # Game state serialization
-│   ├── profiles.py   # Player profiles
-│   └── serializer.py # JSON serialization utilities
-├── lib/              # Reusable utilities and libraries
-│   ├── datatype.py   # Generic DataType/Variable framework (reusable)
-│   └── utils.py      # General utilities
-└── examples/         # Example scripts demonstrating usage
+├── src/pylatro/              # Main package (installed as editable)
+│   ├── cli/                  # User interface and input handling
+│   │   ├── main.py           # CLI entry point
+│   │   ├── context.py        # CLI state and context
+│   │   ├── renderer.py       # UI rendering logic
+│   │   ├── layouts.py        # Screen layouts and display
+│   │   └── input_handler.py  # Input processing
+│   ├── core/                 # Game mechanics and models
+│   │   ├── models.py         # Core data types (Card, Joker, Blind, etc.)
+│   │   ├── poker.py          # Poker hand evaluation
+│   │   └── run.py            # Run/campaign progression logic
+│   ├── content/              # Game content and data management
+│   │   ├── loader.py         # Data file loading
+│   │   ├── repository.py     # Content storage and access
+│   │   ├── metadata.py       # Metadata management
+│   │   └── data/             # Game content files (JSON/text)
+│   ├── persistence/          # Save state and profiles
+│   │   ├── app_state.py      # Game state serialization
+│   │   ├── profiles.py       # Player profiles
+│   │   ├── saves.py          # Save management
+│   │   └── serializer.py     # JSON serialization utilities
+│   ├── lib/                  # Reusable utilities and libraries
+│   │   ├── datatype.py       # Generic DataType/Variable framework (reusable)
+│   │   ├── utils.py          # General utilities
+│   │   └── str_convert.py    # String conversion utilities
+│   └── myjson/               # JSON utilities
+├── examples/                 # Example scripts demonstrating usage
+│   ├── game_entities.py      # Game entity creation examples
+│   └── datatype_usage.py     # DataType framework examples
+├── docs/                     # Design and API documentation
+├── designs/                  # UI design notes
+├── app_setup.py              # Application initialization
+├── cli.py                    # CLI entry point script
+├── templates.py              # UI templates and styling
+├── pyproject.toml            # Project configuration (build, dependencies)
+├── .gitignore                # Git ignore rules
+└── README.md                 # This file
 ```
 
 ### Data Flow
@@ -206,7 +238,7 @@ Game entities in Pylatro use the `DataType` framework, a generic type system tha
 - Validation and loading/dumping
 - JSON serialization
 
-**Example: Playing Card** (from `core/models.py`):
+**Example: Playing Card** (from `src/pylatro/core/models.py`):
 
 ```python
 class PlayingCard(DataType):
@@ -233,7 +265,7 @@ class PlayingCard(DataType):
         return cls(rank, suit, chips)
 ```
 
-**Example: Joker** (from `core/models.py`):
+**Example: Joker** (from `src/pylatro/core/models.py`):
 
 ```python
 class Joker(DataType):
@@ -271,7 +303,7 @@ Game data is stored in `content/data/` as text/JSON files and loaded via `conten
 ### Example: Loading Game Data
 
 ```python
-from content.loader import load_jokers
+from pylatro.content.loader import load_jokers
 
 jokers = load_jokers()  # Returns list of Joker objects
 for joker in jokers:
@@ -285,6 +317,8 @@ for joker in jokers:
 ### lib/datatype.py
 
 A generic type system framework designed for data-driven games and applications. **This library is portable and designed to be reused in other projects.**
+
+Location: `src/pylatro/lib/datatype.py`
 
 **Key Features:**
 - Type-safe field definitions using `Variable` descriptors
@@ -309,19 +343,19 @@ A generic type system framework designed for data-driven games and applications.
 Pylatro is designed to be extensible. Potential contributions include:
 
 ### For Learners
-- Study individual modules to understand design patterns
-- Modify data files in `content/data/` to test game behavior
+- Study individual modules in `src/pylatro/` to understand design patterns
+- Modify data files in `src/pylatro/content/data/` to test game behavior
 - Extend models with new card types or abilities
-- Implement new algorithms in `core/poker.py` or game evaluation
+- Implement new algorithms in `src/pylatro/core/poker.py` or game evaluation
 
 ### For Modders
 1. **Add new cards/jokers:**
-   - Edit `content/data/jokers.txt` with new definitions
-   - Create corresponding data types in `core/models.py` if needed
+   - Edit `src/pylatro/content/data/jokers.txt` with new definitions
+   - Create corresponding data types in `src/pylatro/core/models.py` if needed
    - Implement ability logic when gameplay loop is complete
 
 2. **Create custom decks:**
-   - Define in `content/data/deck_combinations/`
+   - Define in `src/pylatro/content/data/deck_combinations/`
    - Reference in deck loading logic
 
 3. **Extend the modding API:**
@@ -382,7 +416,7 @@ Pylatro is designed to be extensible. Potential contributions include:
 - Original game repository (if publicly available) for reference implementations
 
 ### Project Documentation
-- [datatype.py Documentation](lib/datatype.py) — Inline docs for the DataType framework
+- [datatype.py Documentation](src/pylatro/lib/datatype.py) — Inline docs for the DataType framework
 - [Examples](examples/) — Practical usage patterns
 
 ---
@@ -392,7 +426,7 @@ Pylatro is designed to be extensible. Potential contributions include:
 If you have questions about this project:
 1. Check the [design documentation](docs/) for architecture details
 2. Review [examples/](examples/) for usage patterns
-3. Examine [core/models.py](core/models.py) for data structure definitions
+3. Examine [src/pylatro/core/models.py](src/pylatro/core/models.py) for data structure definitions
 
 For issues or improvements, consider forking and submitting pull requests!
 
@@ -422,6 +456,6 @@ These tools were used responsibly to accelerate development while maintaining ed
 
 ---
 
-**License:** MIT License © 2026 Peter Hunt  
+**License:** MIT License © 2026 Peter Hunt
 **See:** [LICENSE](LICENSE) for full text.
 

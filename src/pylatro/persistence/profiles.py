@@ -1,6 +1,6 @@
 """Player profile schema and unlocks."""
-from lib.datatype import DataType, Variable
-from content import get_jokers, get_decks, get_poker_hands
+from pylatro.lib.datatype import DataType, Variable
+from pylatro.content import get_jokers, get_decks, get_poker_hands
 
 
 class ProfileStats(DataType):

@@ -1,6 +1,6 @@
 """Game content: data, metadata, and lookups."""
 
-from content.repository import (
+from pylatro.content.repository import (
     get_jokers, get_joker_rarities, get_joker_costs,
     get_tarots,
     get_planets, get_planet_effects,

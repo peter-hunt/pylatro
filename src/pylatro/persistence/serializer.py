@@ -2,8 +2,8 @@
 import json
 from pathlib import Path
 
-from myjson import dumps, loads
-from lib.datatype import DataType
+from pylatro.myjson import dumps, loads
+from pylatro.lib.datatype import DataType
 
 
 def to_json(obj: DataType) -> str:

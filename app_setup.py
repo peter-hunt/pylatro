@@ -10,12 +10,15 @@ This module is responsible for getting the application into a ready state
 before the main game loop begins.
 """
 
+from pylatro.persistence.profiles import ProfileStats
+from pylatro.persistence.app_state import AppState, load_app_state, save_app_state
 from pathlib import Path
+import sys
 import json
 import logging
 
-from persistence.app_state import AppState, load_app_state, save_app_state
-from persistence.profiles import ProfileStats
+# Add src directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 # Setup logging
@@ -25,7 +28,14 @@ logger = logging.getLogger(__name__)
 ROOT_DIR = Path(__file__).parent
 SAVES_DIR = ROOT_DIR / "saves"
 PROFILES_DIR = SAVES_DIR / "profiles"
-DATA_DIR = ROOT_DIR / "content" / "data"
+
+# Content data directory - resolved from the installed package
+try:
+    from pylatro.content.loader import _get_content_dir
+    DATA_DIR = _get_content_dir()
+except ImportError:
+    # Fallback if import fails
+    DATA_DIR = ROOT_DIR / "src" / "pylatro" / "content" / "data"
 
 
 def init_directories():

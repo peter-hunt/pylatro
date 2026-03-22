@@ -1,7 +1,7 @@
 """Game content metadata: display names, effects, and unlock conditions."""
 from pathlib import Path
 
-from content.repository import (
+from pylatro.content.repository import (
     get_jokers, get_tarots, get_planets, get_planet_effects,
     get_spectrals, get_decks, get_vouchers, get_enhancements, get_seals
 )

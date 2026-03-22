@@ -24,12 +24,13 @@ requiring clean, type-safe data structures with serialization support.
 """
 
 from collections.abc import Callable
+from enum import Enum
 from io import TextIOWrapper
 from re import fullmatch
 from typing import Any
 
-from myjson import load as json_load, dump as json_dump
-from str_convert import to_snake_case
+from pylatro.myjson import load as json_load, dump as json_dump
+from pylatro.lib.str_convert import to_snake_case
 from .utils import TypeLike, istype
 
 
@@ -39,7 +40,8 @@ __all__ = [
 ]
 
 
-Immutable = int | float | complex | bool | str | tuple | bytes | range | frozenset
+Immutable = int | float | complex | bool | str | tuple | bytes | range | frozenset | type(
+    None) | Enum
 
 
 class Variable:

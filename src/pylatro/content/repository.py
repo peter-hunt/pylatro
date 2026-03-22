@@ -1,5 +1,5 @@
 """Content lookups: lazy-loaded caches for game data."""
-from content.loader import (
+from pylatro.content.loader import (
     load_jokers, load_tarots, load_planets, load_spectrals,
     load_decks, load_vouchers, load_modifiers, load_booster_packs,
     load_tags, load_stakes, load_poker_hands

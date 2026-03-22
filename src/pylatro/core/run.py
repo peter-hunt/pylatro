@@ -1,7 +1,7 @@
 """Game state tracking: current run and statistics."""
-from lib.datatype import DataType, Variable
+from pylatro.lib.datatype import DataType, Variable
 
-from core.models import PlayingCard, Joker, Deck, Consumable, Voucher, Tag
+from pylatro.core.models import PlayingCard, Joker, Deck, Consumable, Voucher, Tag
 
 
 class RunStats(DataType):

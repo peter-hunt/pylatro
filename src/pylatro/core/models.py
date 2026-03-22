@@ -2,7 +2,7 @@
 from enum import Enum, auto
 from numbers import Number
 
-from lib.datatype import DataType, Variable
+from pylatro.lib.datatype import DataType, Variable
 
 
 class Enhancement(Enum):
@@ -38,10 +38,9 @@ class PlayingCard(DataType):
         Variable("rank", int),  # 1-13
         Variable("suit", str),  # spade, heart, club, diamond
         Variable("chips", int),
-        Variable("enhancement", Enhancement,
-                 default_factory=lambda: Enhancement.BASE),
-        Variable("seal", Seal, default_factory=lambda: Seal.NONE),
-        Variable("edition", Edition, default_factory=lambda: Edition.BASE),
+        Variable("enhancement", Enhancement, Enhancement.BASE),
+        Variable("seal", Seal, Seal.NONE),
+        Variable("edition", Edition, Edition.BASE),
     ]
 
     @classmethod
@@ -76,11 +75,9 @@ class Joker(DataType):  # sell price is cost / 2 rounded down
     variables = [
         Variable("name", str),
         Variable("cost", int),
-        Variable("edition", Edition, default_factory=lambda: Edition.BASE),
-        Variable("lifecycle", Lifecycle,
-                 default_factory=lambda: Lifecycle.NORMAL),
-        Variable("stake_sticker", StakeSticker,
-                 default_factory=lambda: StakeSticker.NONE),
+        Variable("edition", Edition, Edition.BASE),
+        Variable("lifecycle", Lifecycle, Lifecycle.NORMAL),
+        Variable("stake_sticker", StakeSticker, StakeSticker.NONE),
 
         Variable("current_plus_chips", int, 0),
         Variable("current_plus_mult", int, 0),
@@ -92,9 +89,9 @@ class Deck(DataType):
     variables = [
         Variable("name", str),
         Variable("draw", list[PlayingCard]),
-        Variable("hand", list[PlayingCard], default_factory=[]),
-        Variable("discarded", list[PlayingCard], default_factory=[]),
-        Variable("played", list[PlayingCard], default_factory=[]),
+        Variable("hand", list[PlayingCard], default_factory=lambda: []),
+        Variable("discarded", list[PlayingCard], default_factory=lambda: []),
+        Variable("played", list[PlayingCard], default_factory=lambda: []),
     ]
 
 

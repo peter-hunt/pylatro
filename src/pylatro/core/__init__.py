@@ -1,11 +1,11 @@
 """Game core: domain models, game state, and core logic."""
 
-from core.models import (
+from pylatro.core.models import (
     Enhancement, Seal, Edition, Lifecycle, StakeSticker,
     PlayingCard, Joker, Deck, Consumable, Voucher, Tag
 )
-from core.run import Run, RunStats
-from core.poker import find_hand
+from pylatro.core.run import Run, RunStats
+from pylatro.core.poker import find_hand
 
 __all__ = [
     # Models

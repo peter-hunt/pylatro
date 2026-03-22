@@ -1,7 +1,7 @@
 """Poker hand detection and scoring logic."""
 from typing import Iterable
 
-from core.models import PlayingCard
+from pylatro.core.models import PlayingCard
 
 
 def is_loosely_straight(sorted_ranks: Iterable[int], length: int):

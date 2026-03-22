@@ -2,8 +2,8 @@
 from pathlib import Path
 import json
 
-from core import Run
-from lib.datatype import DataType
+from pylatro.core import Run
+from pylatro.lib.datatype import DataType
 
 
 def _get_saves_dir():

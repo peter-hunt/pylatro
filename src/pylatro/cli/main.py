@@ -3,12 +3,12 @@ Pylatro CLI Main Entry Point
 Keyboard-driven menu system for Balatro recreation.
 """
 
-from cli.context import CLIContext
-from cli.renderer import CLIRenderer
-from cli.input_handler import InputHandler, KeyEvent
-from cli import layouts
-from content import get_decks, get_stakes
-from persistence import load_app_state, save_app_state, get_app_state
+from pylatro.cli.context import CLIContext
+from pylatro.cli.renderer import CLIRenderer
+from pylatro.cli.input_handler import InputHandler, KeyEvent
+from pylatro.cli import layouts
+from pylatro.content import get_decks, get_stakes
+from pylatro.persistence import load_app_state, save_app_state, get_app_state
 from pathlib import Path
 import json
 

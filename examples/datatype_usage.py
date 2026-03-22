@@ -7,7 +7,7 @@ Demonstrates core features of the DataType framework:
 - Validation before loading
 """
 
-from lib.datatype import DataType, Variable
+from pylatro.lib.datatype import DataType, Variable
 
 
 # Example 1: Basic DataType Definition
@@ -180,7 +180,7 @@ def example_type_safety():
     print()
 
 
-if __name__ == "__main__":
+def main():
     """Run all examples."""
     print("\n")
     print("╔" + "═" * 58 + "╗")
@@ -198,3 +198,7 @@ if __name__ == "__main__":
     print("=" * 60)
     print("Examples completed successfully!")
     print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()

@@ -7,7 +7,7 @@ Demonstrates how to work with Pylatro's game entity models:
 """
 
 from enum import Enum, auto
-from core.models import PlayingCard, Joker, Deck, Enhancement, Seal, Edition, Lifecycle, StakeSticker
+from pylatro.core.models import PlayingCard, Joker, Deck, Enhancement, Seal, Edition, Lifecycle, StakeSticker
 
 
 def example_playing_cards():
@@ -162,7 +162,7 @@ def example_card_validation():
     print()
 
 
-if __name__ == "__main__":
+def main():
     """Run all game entity examples."""
     print("\n")
     print("╔" + "═" * 58 + "╗")
@@ -179,3 +179,7 @@ if __name__ == "__main__":
     print("=" * 60)
     print("Game entity examples completed!")
     print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()
