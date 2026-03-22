@@ -1,5 +1,7 @@
+"""Domain models for the game: enums and basic data types."""
 from enum import Enum, auto
 from numbers import Number
+
 from lib.datatype import DataType, Variable
 
 
@@ -36,9 +38,10 @@ class PlayingCard(DataType):
         Variable("rank", int),  # 1-13
         Variable("suit", str),  # spade, heart, club, diamond
         Variable("chips", int),
-        Variable("enhancement", Enhancement, Enhancement.BASE),
-        Variable("seal", Seal, Seal.NONE),
-        Variable("edition", Edition, Edition.BASE),
+        Variable("enhancement", Enhancement,
+                 default_factory=lambda: Enhancement.BASE),
+        Variable("seal", Seal, default_factory=lambda: Seal.NONE),
+        Variable("edition", Edition, default_factory=lambda: Edition.BASE),
     ]
 
     @classmethod
@@ -73,9 +76,11 @@ class Joker(DataType):  # sell price is cost / 2 rounded down
     variables = [
         Variable("name", str),
         Variable("cost", int),
-        Variable("edition", Edition, Edition.BASE),
-        Variable("lifecycle", Lifecycle, Lifecycle.NORMAL),
-        Variable("stake_sticker", StakeSticker, StakeSticker.NONE),
+        Variable("edition", Edition, default_factory=lambda: Edition.BASE),
+        Variable("lifecycle", Lifecycle,
+                 default_factory=lambda: Lifecycle.NORMAL),
+        Variable("stake_sticker", StakeSticker,
+                 default_factory=lambda: StakeSticker.NONE),
 
         Variable("current_plus_chips", int, 0),
         Variable("current_plus_mult", int, 0),
@@ -93,56 +98,20 @@ class Deck(DataType):
     ]
 
 
+class Consumable(DataType):
+    variables = [
+        Variable("name", str),
+        Variable("card_type", str),  # tarot, planet, spectral
+    ]
+
+
 class Voucher(DataType):
     variables = [
         Variable("name", str),
     ]
 
 
-class BoosterPack(DataType):
-    variables = [
-        Variable("name", str),
-        Variable("size", str, "normal"),
-    ]
-
-
 class Tag(DataType):
-    variables = [
-        Variable("name", str),
-    ]
-
-
-class Blind(DataType):
-    variables = [
-        Variable("name", str),
-    ]
-
-
-class Consumable(DataType):
-    variables = [
-        Variable("name", str),
-    ]
-
-
-class TarotCard(Consumable):
-    variables = [
-        Variable("name", str),
-    ]
-
-
-class PlanetCard(Consumable):
-    variables = [
-        Variable("name", str),
-    ]
-
-
-class SpectralCard(Consumable):
-    variables = [
-        Variable("name", str),
-    ]
-
-
-class Stake(DataType):
     variables = [
         Variable("name", str),
     ]

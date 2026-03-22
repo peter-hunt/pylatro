@@ -7,7 +7,8 @@ from cli.context import CLIContext
 from cli.renderer import CLIRenderer
 from cli.input_handler import InputHandler, KeyEvent
 from cli import layouts
-from constants import DECKS, STAKES
+from content import get_decks, get_stakes
+from persistence import load_app_state, save_app_state, get_app_state
 from pathlib import Path
 import json
 
@@ -26,25 +27,26 @@ class PylatroCLI:
 
     def _load_data(self):
         """Load game data (profiles, decks, stakes)."""
-        # Load profile list
-        profiles_dir = Path("profiles")
+        # Load app state
+        app_state = load_app_state()
+
+        # Load profile list from saves/profiles/
+        profiles_dir = Path("saves/profiles")
         if profiles_dir.exists():
             self.ctx.profiles = sorted(
-                [p.stem for p in profiles_dir.glob("*.json")])
+                [p.stem.replace("profile_", "") for p in profiles_dir.glob("profile_*.json")])
         if not self.ctx.profiles:
             self.ctx.profiles = ["P1"]
 
-        # Load decks and stakes from constants
-        self.ctx.decks = DECKS if DECKS else [
+        # Load decks and stakes from content
+        self.ctx.decks = get_decks() if get_decks() else [
             "Red Deck", "Green Deck", "Blue Deck"]
-        self.ctx.stakes = STAKES if STAKES else [
+        self.ctx.stakes = get_stakes() if get_stakes() else [
             "White", "Red", "Green", "Black", "Blue", "Purple", "Orange", "Gold"]
 
-        # Set current profile
-        if Path("app_state.json").exists():
-            with open("app_state.json") as f:
-                data = json.load(f)
-                self.ctx.current_profile = data.get("last_profile", "P1")
+        # Set current profile from app state
+        self.ctx.current_profile = app_state.last_profile_loaded or (
+            self.ctx.profiles[0] if self.ctx.profiles else "P1")
 
     def run(self):
         """Main game loop."""

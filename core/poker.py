@@ -1,6 +1,7 @@
-from game_objects import PlayingCard
-
+"""Poker hand detection and scoring logic."""
 from typing import Iterable
+
+from core.models import PlayingCard
 
 
 def is_loosely_straight(sorted_ranks: Iterable[int], length: int):
@@ -26,6 +27,17 @@ def straight_test(sorted_ranks: Iterable[int], length: int, strict: bool):
 # ? either with suit or rank on either side, that card is not scored
 def find_hand(*cards: PlayingCard, four_fingers: bool = False,
               shortcut: bool = False, smeared: bool = False) -> tuple[str, tuple[bool]]:
+    """Detect poker hand from given cards.
+
+    Args:
+        *cards: 1-5 PlayingCard objects
+        four_fingers: If True, allows 4-card straights
+        shortcut: If True, allows non-strict straights
+        smeared: If True, converts certain suits (club->spade, diamond->heart)
+
+    Returns:
+        Tuple of (hand_name, card_mask) where card_mask indicates which cards contribute to the hand
+    """
     if not 1 <= (count := len(cards)) <= 5:
         raise ValueError(f"can only find hand of 1-5 cards, not {count}")
 

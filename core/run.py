@@ -1,9 +1,11 @@
+"""Game state tracking: current run and statistics."""
 from lib.datatype import DataType, Variable
-from constants import POKER_HANDS
-from game_objects import PlayingCard, Joker, Deck, Voucher, Tag, Consumable
+
+from core.models import PlayingCard, Joker, Deck, Consumable, Voucher, Tag
 
 
 class RunStats(DataType):
+    """Statistics tracked during a single run."""
     variables = [
         # Game Over Stats
         Variable("best_hand", int, 0),
@@ -17,8 +19,8 @@ class RunStats(DataType):
         # seed is displayed
 
         # also for The Duo/Trio/Family/Order/Tribe
-        Variable("hands_played", dict,
-                 default_factory=lambda: {hand: 0 for hand in POKER_HANDS}),
+        # hands_played will be populated from content.get_poker_hands()
+        Variable("hands_played", dict, default_factory=dict),
 
         # Joker Unlock Req
         Variable("consecutive_rounds_won_with_one_hand", int, 0),  # Troubadour
@@ -30,6 +32,7 @@ class RunStats(DataType):
 
 # current run
 class Run(DataType):
+    """Represents the current game run state."""
     variables = [
         Variable("deck", Deck),
 
