@@ -25,7 +25,6 @@
     - [Requirements](#requirements)
     - [Setup](#setup)
     - [Running Examples](#running-examples)
-    - [RNG Seed Verification](#rng-seed-verification)
     - [Current Capabilities](#current-capabilities)
   - [Project Architecture](#project-architecture)
     - [Directory Structure](#directory-structure)
@@ -196,30 +195,6 @@ python -m examples.game_entities
 # Run DataType framework example
 python -m examples.datatype_usage
 ```
-
-### RNG Seed Verification
-
-Pylatro now includes an initial Balatro-style RNG subsystem under `src/pylatro/rng`.
-
-Warning: This is highly experimental and doesn't seem to match the full game yet. The RNG system will be implemented in python for now.
-
-Generate a deterministic seed trace report:
-
-```bash
-python -m pylatro.rng.report --seed 7LB2WVPK --antes 2 --shop-cards 2 --erratic-count 20
-```
-
-Run RNG-specific tests:
-
-```bash
-pytest -q tests/test_rng_engine.py tests/test_rng_report.py
-```
-
-RNG documentation:
-
-- `docs/rng_design.md`
-- `docs/rng_event_order.md`
-- `docs/rng_seed_verification.md`
 
 ### Current Capabilities
 

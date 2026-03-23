@@ -125,6 +125,8 @@ Cash Out: $?
 {Delayed Gratification} $
 {Cloud 9} $
 [Interest] 1 interest per $[5?] \([5?] max\) $
+[Tag Icon] Defeat the Boss Blind $
+[Copied Tag Icon] Defeat the Boss Blind $
 
 # Game End
 

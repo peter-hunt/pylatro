@@ -4,3 +4,5 @@ Egg sell value is copied by Ankh
 
 Scoring needs to know if boss ability is triggered
 Structured data for blind ability
+
+Free items can be bought even when money is negative
