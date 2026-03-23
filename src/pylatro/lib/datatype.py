@@ -66,14 +66,14 @@ class Variable:
     default: Any | None
     default_factory: Callable[[], Any] | None
     validator: Callable[[Any], bool] | None
-    loader: Callable[[Any], dict] | None
-    dumper: Callable[[Any], dict] | None
+    loader: Callable[[Any], Any] | None
+    dumper: Callable[[Any], Any] | None
 
     def __init__(self, name: str, type: TypeLike,
                  default: Any | None = None, default_factory: Callable | None = None,
                  validator: Callable[[Any], bool] | None = None,
-                 loader: Callable[[Any], dict] | None = None,
-                 dumper: Callable[[Any], dict] | None = None):
+                 loader: Callable[[Any], Any] | None = None,
+                 dumper: Callable[[Any], Any] | None = None):
         """Initialize a Variable field descriptor.
 
         Args:
@@ -82,8 +82,8 @@ class Variable:
             default: Immutable default value (optional, for scalar types)
             default_factory: Callable that returns default value (for mutable types)
             validator: Function(value) -> bool to validate values
-            loader: Function to deserialize from stored format
-            dumper: Function to serialize to stored format
+            loader: Function(value) -> deserialized_value to deserialize from stored format
+            dumper: Function(value) -> serialized_value to serialize to stored format
 
         Raises:
             NameError: If name is invalid or reserved

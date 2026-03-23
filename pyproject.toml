@@ -12,7 +12,11 @@ authors = [{name = "Peter Hunt"}]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
+rng = ["lupa>=2.0"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-packages = ["pylatro"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pylatro*"]

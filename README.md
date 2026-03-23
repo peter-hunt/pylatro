@@ -3,6 +3,11 @@
 > **Status:** Active Development - Early Stage
 > A Python implementation of core Balatro game mechanics and data structures, designed for learning code organization, game design patterns, and deck-building algorithm exploration.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Status: Active Development](https://img.shields.io/badge/Status-Active%20Development-brightgreen)]()
+[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/peterhunt/pylatro/releases)
+
 ---
 
 ## Table of Contents
@@ -14,10 +19,13 @@
   - [Project Overview](#project-overview)
     - [Goals \& Learning Objectives](#goals--learning-objectives)
     - [Current Scope](#current-scope)
+  - [Save Data Structure](#save-data-structure)
+    - [Design Notes](#design-notes)
   - [Installation](#installation)
     - [Requirements](#requirements)
     - [Setup](#setup)
     - [Running Examples](#running-examples)
+    - [RNG Seed Verification](#rng-seed-verification)
     - [Current Capabilities](#current-capabilities)
   - [Project Architecture](#project-architecture)
     - [Directory Structure](#directory-structure)
@@ -189,6 +197,30 @@ python -m examples.game_entities
 python -m examples.datatype_usage
 ```
 
+### RNG Seed Verification
+
+Pylatro now includes an initial Balatro-style RNG subsystem under `src/pylatro/rng`.
+
+Warning: This is highly experimental and doesn't seem to match the full game yet. The RNG system will be implemented in python for now.
+
+Generate a deterministic seed trace report:
+
+```bash
+python -m pylatro.rng.report --seed 7LB2WVPK --antes 2 --shop-cards 2 --erratic-count 20
+```
+
+Run RNG-specific tests:
+
+```bash
+pytest -q tests/test_rng_engine.py tests/test_rng_report.py
+```
+
+RNG documentation:
+
+- `docs/rng_design.md`
+- `docs/rng_event_order.md`
+- `docs/rng_seed_verification.md`
+
 ### Current Capabilities
 
 The project currently supports:
@@ -227,8 +259,7 @@ pylatro/
 │   ├── persistence/          # Save state and profiles
 │   │   ├── app_state.py      # Game state serialization
 │   │   ├── profiles.py       # Player profiles
-│   │   ├── saves.py          # Save management
-│   │   └── serializer.py     # JSON serialization utilities
+│   │   └── saves.py          # Save management
 │   ├── lib/                  # Reusable utilities and libraries
 │   │   ├── datatype.py       # Generic DataType/Variable framework (reusable)
 │   │   ├── utils.py          # General utilities

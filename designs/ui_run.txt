@@ -10,6 +10,7 @@
 Score at least
 [Chip] ?
 Reward: $$$
+No Reward
 
 (Left) Round score [Chip] 0
 (Blue Back) [Chips] x (Red Back) [Mult]
@@ -65,9 +66,9 @@ Vouchers redeemed this run
 [Stake Icon] Black Stake
 [Stake Ability Description]
 
-Also applied
+Also applied (if green and above)
 [Color] [Description]
-(in decreasing order, white bottom)
+(in decreasing order, red bottom)
 
 # Choosing Blind
 
@@ -163,6 +164,15 @@ Melted!
 
 Seltzer
 Drank!
+
+Perishable
+? Remaining
+
+Rental
+-$3
+
+Hanging Chad
+Again!
 
 [Voucher]
 [Voucher Icon]

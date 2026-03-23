@@ -1,3 +1,6 @@
 RNG to keep with the game or be chained with the seed.
 Flower Pot doesn't work with Smeared Joker
 Egg sell value is copied by Ankh
+
+Scoring needs to know if boss ability is triggered
+Structured data for blind ability
