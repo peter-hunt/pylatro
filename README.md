@@ -345,7 +345,7 @@ from pylatro.content.loader import load_jokers
 
 jokers = load_jokers()  # Returns list of Joker objects
 for joker in jokers:
-    print(f"{joker.name} (Cost: {joker.cost})")
+    print(f"{joker.id} (Cost: {joker.cost})")
 ```
 
 ---

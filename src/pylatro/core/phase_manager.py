@@ -42,14 +42,27 @@ def play_hand_phase(
     Main gameplay phase. Player selects cards from hand and plays them.
     This function:
     1. Validates the selection (non-empty, in range, hands available).
-    2. Detects the poker hand type using detect_poker_hand() 
+    2. Detects the poker hand type using detect_poker_hand()
        (which calls poker.analyze_poker_hand() with special Joker modifiers).
     3. Calls run.play_cards() to move cards to deck.played.
     4. Calls scoring.evaluate_hand() to calculate chips/mult.
-       - evaluate_hand() may remove jokers (Seltzer, Gros Michel) during scoring.
-       - Returns detailed dict including effect_messages.
-    5. Updates run.stats with cards played and hand type frequency.
-    6. Returns result for UI display (chips, hand type, jokers triggered, messages).
+       - Triggers on_hand_score joker abilities for all jokers in order
+       - Collects removal signals from joker effects (Seltzer, Gros Michel, etc.)
+       - Applies ALL joker removal mutations AFTER all abilities trigger (safe iteration)
+       - Returns detailed dict including effect_messages and income_multipliers
+    5. Calculate gold seal income from played cards (GOLD seals, RED seals on GOLD cards).
+       - Check if Golden Ticket or similar jokers applied multipliers in step 4
+       - Apply multiplier to seal income (e.g., 1.5x from Golden Ticket)
+       - Add seal_income to run.money
+    6. Apply joker removals that haven't been applied yet (from evaluate_hand() results).
+    7. Updates run.stats with cards played and hand type frequency.
+    8. Returns result for UI display (chips, hand type, jokers triggered, income breakdown, messages).
+
+    CRITICAL SEQUENCE after this returns:
+    - Return has "earned_chips" value AND "seal_income" / "total_income_this_hand"
+    - check_round_win() validates chips >= blind_chips
+    - If won: shop_phase() proceeds (money already includes seal income, no separate finalize step)
+    - advance_to_next_round() triggers at_round_end joker abilities
 
     Implementation notes:
     - Validation should check:
@@ -60,13 +73,12 @@ def play_hand_phase(
     - Poker hand detection calls detect_poker_hand(cards, run) which handles
       special Joker rules (Smeared Joker modifies suits, Four Fingers allows
       4-card straights, Shortcut changes mechanics, etc.).
-    - evaluate_hand() triggers all joker abilities, collects their messages,
-      and applies joker removals AFTER all abilities have been triggered.
+    - evaluate_hand() triggers all joker abilities and collects removal signals.
+      It applies joker removals AFTER all abilities have been triggered.
       This ensures the joker list remains stable during iteration.
     - effect_messages from evaluate_hand() describe what happened (e.g.,
       "Seltzer will destroy Droll", "Gros Michel will expire").
-      Display these to the player. Removals are already applied to run.jokers
-      by evaluate_hand(), so you don't need to process them further.
+      Display these to the player.
 
     Args:
         run: The Run object.
@@ -78,6 +90,7 @@ def play_hand_phase(
                   "success": bool,
                   "error": str (if success=False),
                   "chips": int,
+                  "earned_chips": int,  # same as chips
                   "hand_type": str,
                   "cards_scored": [...],
                   "jokers_triggered": [
@@ -89,9 +102,11 @@ def play_hand_phase(
                       },
                       ...
                   ],
+                  "money_income": int,  # total money earned from all sources (GOLD seals, enhancements, etc.)
                   "effect_messages": [
                       "Seltzer destroyed Droll",
-                      "Ice Cream has expired"
+                      "Gold Seal: +$3",
+                      "Gold Enhancement: +$3 held"
                   ],
                   "mult_breakdown": {...}  # details of mult calculation
               }
@@ -99,6 +114,7 @@ def play_hand_phase(
     Example:
         Player plays cards [0, 1, 3]. Detected as "pair".
         Chips: 135, Mult: 6.75, Messages: ["Droll: +50% mult", "Cavendish: x3 mult"].
+        Money income: $6 from two GOLD seals ($3 each), added to run.money before shop phase.
         If error (not enough hands), returns success=False with error message.
     """
     pass
@@ -132,6 +148,45 @@ def check_round_win(
 
     Returns:
         bool: True if won, False if lost.
+    """
+    pass
+
+
+# =============================================================================
+# POST-HAND CLEANUP (BEFORE SHOP)
+# =============================================================================
+
+def finalize_hand_scoring(run: Run) -> dict:
+    """
+    Post-hand cleanup before shop phase (optional post-processing).
+
+    Called after play_hand_phase() and check_round_win() succeed.
+
+    PRIMARY INCOME ALREADY CALCULATED: Gold seal income and joker multipliers
+    were applied during play_hand_phase(), so run.money is already updated.
+
+    This function handles any remaining cleanup:
+    1. Confirm all joker removal mutations from on_hand_score were fully applied
+    2. Handle any deferred/cleanup joker effects that don't fit in evaluate_hand()
+    3. Process any post-score card effects (beyond seals)
+
+    This is mainly a validation/cleanup step. If everything is applied in
+    play_hand_phase(), this function can be minimal or even skipped.
+
+    Implementation note:
+    - If evaluate_hand() fully applies joker removals, this step is optional
+    - Mainly exists for structured cleanup and any last-minute mutations
+    - Does NOT recalculate income (already done in play_hand_phase)
+
+    Args:
+        run: The Run object (all mutations already applied)
+
+    Returns:
+        dict: Cleanup status (mainly for logging/validation):
+              {
+                  "jokers_removed": int,  # count of jokers removed (should be 0 if all done)
+                  "status": str,  # "complete" or description of any issues
+                  "messages": [str]
     """
     pass
 
@@ -252,10 +307,23 @@ def apply_blind_effect(
 
 def advance_to_next_round(run: Run) -> None:
     """
-    Transition from one ante to the next.
+    Transition from one ante to the next (after shop phase completes).
 
-    Called after shop phase is done. Increments round state, resets hand/deck,
-    redraws starting hand, and triggers round-end Joker effects.
+    Called after shop phase is done. This is where round-end Joker effects trigger.
+
+    SEQUENCE (full hand → next hand):
+    1. play_hand_phase() → score hand, trigger on_hand_score joker abilities,
+       calculate gold seal income (with multipliers), apply joker removals
+    2. check_round_win() → validate earned_chips >= blind_chips
+    3. [Optional] finalize_hand_scoring() → post-cleanup (if needed; income already applied)
+    4. shop_phase() → player purchases items (money already includes seal income)
+    5. advance_to_next_round() ← YOU ARE HERE
+
+    At this point:
+    - All joker removals from on_hand_score are complete
+    - All seal income is calculated and added to run.money
+    - Player has finished shopping
+    - Now trigger at_round_end joker effects and prepare next hand
 
     Steps:
     1. Call run.increment_round() to update ante, round, reset hands/discards,
@@ -263,29 +331,25 @@ def advance_to_next_round(run: Run) -> None:
     2. Refill deck.draw if needed (combine played/discarded back in, reshuffle).
     3. Redraw run.hand_size cards into hand_cards using run.draw_card().
     4. Trigger round-end Joker abilities: iterate through run.jokers and
-       call abilities.trigger_joker_ability(joker, joker_index, "at_round_end", {...}).
-       - SAFE TO ITERATE: By this point, all on_hand_score removals are complete.
-         The joker list is stable since evaluate_hand() applied all mutations.
-       - Some jokers expire on round-end (Ice Cream signals "will expire").
-       - Some become permanent/eternal (Turtle Bean signals state change).
-       - Collect effect_messages and apply mutations (removals) AFTER collecting all effects.
-       - Note: Track indices carefully if mutations occur (either iterate backwards
-         or rebuild the list after removals).
+       call abilities.trigger_joker_at_round_end(joker, joker_index, context).
+       - SAFE TO ITERATE: All on_hand_score removals are already complete from step 3.
+       - Some jokers expire on round-end (Ice Cream → will_expire=True).
+       - Some become permanent/eternal (Turtle Bean → state_mutations["became_eternal"]=True).
+       - Collect all effects first, then apply mutations (removals) AFTER iteration.
+       - Note: Track indices carefully if mutations occur (iterate backwards or rebuild).
     5. Apply voucher passive effects: for each voucher in run.vouchers,
        call abilities.apply_voucher_effect(voucher, run).
+    6. Return to start of next hand (play_hand_phase).
 
     Implementation note:
     - Refilling the deck might be handled in run.increment_round() or separately.
       Ensure deck.draw is populated before redrawing.
-    - Joker removal pattern: Abilities return messages indicating removals ("Ice Cream
-      will expire"), which you collect, then apply AFTER all jokers have been triggered.
-      This avoids list mutation during iteration.
-    - When applying removals AFTER round-end triggering, either:
-      * Iterate backwards through indices (safer), or
-      * Build a new list of jokers to keep, or
-      * Carefully track index shifts
+    - Joker removal pattern with new JokerEndRoundEffect:
+      * Call trigger_joker_at_round_end() for each joker
+      * Collect results and check effect.will_expire and effect.target_removal_index
+      * Apply all removals at once AFTER iteration (backwards is safer)
     - Some Jokers create cards or modify deck state on round-end; handle those
-      via trigger_joker_ability().
+      via trigger_joker_at_round_end().
     - Perishable Jokers have durations; decrement or check expiry here.
     - Seasonal vouchers might expire; check and remove if needed.
 
@@ -321,8 +385,8 @@ def detect_poker_hand(
       Check run.has_joker("Shortcut") and enable shortcut parameter.
     - Other jokers may affect detection in future.
 
-    OPTIMIZATION: Joker effects that modify OTHER jokers (Mime, Hologram) are 
-    handled during scoring, not here. But effects that modify the DETECTION 
+    OPTIMIZATION: Joker effects that modify OTHER jokers (Mime, Hologram) are
+    handled during scoring, not here. But effects that modify the DETECTION
     itself must happen here since they determine what hand-type gets detected.
 
     Implementation pattern:

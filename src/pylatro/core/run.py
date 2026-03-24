@@ -27,6 +27,12 @@ class RunStats(DataType):
         Variable("had_more_than_4_jokers", bool, False),  # Invisible Joker
         # Achievement Unlock Req
         Variable("rerolls_done", bool, False),  # You Get What You Get
+
+        # Tag Stats
+        Variable("blinds_skipped", int, 0),  # Speed Tag: $5 per skipped blind
+        Variable("tags_received", int, 0),  # Total tag instances received
+        # Garbage Tag: $1 per unused discard
+        Variable("unused_discards", int, 0),
     ]
 
 
@@ -57,6 +63,12 @@ class Run(DataType):
 
         Variable("ante", int, 1),
         Variable("round", int, 1),
+
+        # Tag State Management
+        # True if next tag should be duplicated
+        Variable("double_tag_pending", bool, False),
+        # Flags for shop modifiers (coupon_active, d6_reroll_active, etc.)
+        Variable("pending_tag_effects", dict, default_factory=dict),
     ]
 
     # ==========================================================================

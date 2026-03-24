@@ -6,8 +6,7 @@ Demonstrates how to work with Pylatro's game entity models:
 - Understanding card state and modifications
 """
 
-from enum import Enum, auto
-from pylatro.core.models import PlayingCard, Joker, Deck, Enhancement, Seal, Edition, Lifecycle, StakeSticker
+from pylatro.core.models import PlayingCard, Joker, Deck, Consumable, Enhancement, Seal, Edition, Lifecycle, StakeSticker
 
 
 def example_playing_cards():
@@ -47,7 +46,7 @@ def example_jokers():
 
     # Create a basic joker
     joker1 = Joker(
-        name="Joker",
+        id="joker",
         cost=5,
         edition=Edition.BASE,
         lifecycle=Lifecycle.NORMAL,
@@ -59,7 +58,7 @@ def example_jokers():
 
     # Create an advanced joker with modifiers
     joker2 = Joker(
-        name="Mounted Joker",
+        id="mounted_joker",
         cost=8,
         edition=Edition.POLYCHROME,
         lifecycle=Lifecycle.PERISHABLE,
@@ -101,41 +100,69 @@ def example_card_serialization():
 def example_deck_creation():
     """Create and manage a deck."""
     print("=" * 60)
-    print("Example 4: Deck Creation")
+    print("Example 4: Deck Generation")
     print("=" * 60)
 
-    # Create some cards
-    cards = [
-        PlayingCard.from_str("H2"),
-        PlayingCard.from_str("D5"),
-        PlayingCard.from_str("S10"),
-        PlayingCard.from_str("CK"),
-        PlayingCard.from_str("SA"),
-    ]
-
-    # Create a deck
-    my_deck = Deck(
-        name="Starting Deck",
-        draw=cards
-    )
-
-    print(f"Deck: {my_deck.name}")
-    print(f"  Cards in draw: {len(my_deck.draw)}")
-    print(f"  Cards in hand: {len(my_deck.hand)}")
-    print(f"  Cards discarded: {len(my_deck.discarded)}")
+    # Generate a standard deck from content data
+    default_deck = Deck.generate("default")
+    print(f"Default Deck: {default_deck.id}")
+    print(f"  Cards in draw: {len(default_deck.draw)}")
+    print(f"  Cards in hand: {len(default_deck.hand)}")
     print()
 
-    # Access cards
-    print("Cards in deck:")
-    for i, card in enumerate(my_deck.draw, 1):
+    # Generate an alternative deck variant
+    checkered_deck = Deck.generate("checkered")
+    print(f"Checkered Deck: {checkered_deck.id}")
+    print(f"  Cards in draw: {len(checkered_deck.draw)}")
+    print()
+
+    # Access cards from generated deck
+    print("First 10 cards in default deck:")
+    for i, card in enumerate(default_deck.draw[:10], 1):
         print(f"  {i}. {card}")
+    print()
+
+
+def example_joker_creation():
+    """Create jokers from content data."""
+    print("=" * 60)
+    print("Example 5: Joker Creation")
+    print("=" * 60)
+
+    # Create jokers by ID with default properties from content
+    joker1 = Joker.create("joker")
+    joker2 = Joker.create("droll_joker")
+    joker3 = Joker.create("gros_michel_joker", lifecycle=Lifecycle.PERISHABLE)
+
+    print(f"Created jokers from content:")
+    print(f"  {joker1.id}: Cost {joker1.cost}")
+    print(f"  {joker2.id}: Cost {joker2.cost}")
+    print(f"  {joker3.id}: Cost {joker3.cost}, Lifecycle: {joker3.lifecycle.name}")
+    print()
+
+
+def example_consumable_creation():
+    """Create consumables from content data."""
+    print("=" * 60)
+    print("Example 6: Consumable Creation")
+    print("=" * 60)
+
+    # Create consumables by ID, type is auto-detected from content
+    tarot = Consumable.create("the_magician")
+    planet = Consumable.create("mars")
+    spectral = Consumable.create("wraith")
+
+    print(f"Created consumables from content:")
+    print(f"  {tarot.id}: Type {tarot.card_type}")
+    print(f"  {planet.id}: Type {planet.card_type}")
+    print(f"  {spectral.id}: Type {spectral.card_type}")
     print()
 
 
 def example_card_validation():
     """Validate cards using is_valid()."""
     print("=" * 60)
-    print("Example 5: Card Validation")
+    print("Example 7: Card Validation")
     print("=" * 60)
 
     # Valid card data
@@ -174,6 +201,8 @@ def main():
     example_jokers()
     example_card_serialization()
     example_deck_creation()
+    example_joker_creation()
+    example_consumable_creation()
     example_card_validation()
 
     print("=" * 60)

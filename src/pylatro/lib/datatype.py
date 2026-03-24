@@ -40,6 +40,10 @@ __all__ = [
 ]
 
 
+# Sentinel value to distinguish "no default provided" from "None as default value"
+_UNSET = object()
+
+
 Immutable = int | float | complex | bool | str | tuple | bytes | range | frozenset | type(
     None) | Enum
 
@@ -53,7 +57,7 @@ class Variable:
     Attributes:
         name (str): Field name (must be valid Python identifier)
         type (TypeLike): Expected type or type union
-        default (Any | None): Immutable default value (or None)
+        default (Any): Immutable default value (defaults to _UNSET if not provided)
         default_factory (Callable | None): Function to generate default values
         validator (Callable[[Any], bool] | None): Optional validation function
         loader (Callable[[Any], Any] | None): Optional deserialization function
@@ -70,7 +74,7 @@ class Variable:
     dumper: Callable[[Any], Any] | None
 
     def __init__(self, name: str, type: TypeLike,
-                 default: Any | None = None, default_factory: Callable | None = None,
+                 default=_UNSET, default_factory: Callable | None = None,
                  validator: Callable[[Any], bool] | None = None,
                  loader: Callable[[Any], Any] | None = None,
                  dumper: Callable[[Any], Any] | None = None):
@@ -79,7 +83,7 @@ class Variable:
         Args:
             name: Field name (alphanumeric and underscores only)
             type: Type or type union (e.g., int, str, list[str])
-            default: Immutable default value (optional, for scalar types)
+            default: Immutable default value (optional; None can be used as an explicit default)
             default_factory: Callable that returns default value (for mutable types)
             validator: Function(value) -> bool to validate values
             loader: Function(value) -> deserialized_value to deserialize from stored format
@@ -109,12 +113,12 @@ class Variable:
                 "variable 'DUMP_DEFAULTS' is reserved for DataType dumping")
         self.name = name
         self.type = type
-        if default is not None and default_factory is not None:
+        if default is not _UNSET and default_factory is not None:
             raise ValueError(
                 "both default and default_factory are given, conflict")
         self.default = default
         self.default_factory = default_factory
-        self.optional = self.default is not None or self.default_factory is not None
+        self.optional = self.default is not _UNSET or self.default_factory is not None
         self.validator = validator
         self.loader = loader
         self.dumper = dumper
@@ -129,7 +133,7 @@ class Variable:
         Raises:
             ValueError: If no default is available and variable is required.
         """
-        if self.default is not None:
+        if self.default is not _UNSET:
             return self.default
         elif self.default_factory is not None:
             return self.default_factory()
@@ -263,7 +267,7 @@ class DataType:
                                 f" variable with a default: {var.name}")
             elif var.optional:
                 seen_optional = True
-            if var.default is not None and not isinstance(var.default, Immutable):
+            if var.default is not _UNSET and not isinstance(var.default, Immutable):
                 raise ValueError(
                     f"for mutable default values, use getter functions with"
                     f" default_factory instead of default: {var.name}")
