@@ -70,14 +70,14 @@ from core.game_state import GameState
 
 class GameAgent:
     """Base class for implementing strategies."""
-    
+
     def evaluate_decision(self, state: GameState) -> Decision:
         """
         Evaluate the current game state and return a decision.
-        
+
         Args:
             state: Current GameState with all visible information
-        
+
         Returns:
             Decision object (play hand, buy card, sell joker, etc.)
         """
@@ -93,17 +93,17 @@ class GameState:
     draw_pile: list[PlayingCard]
     discard_pile: list[PlayingCard]
     playable_jokers: list[Joker]
-    
+
     # Current challenge
     blind: Blind
     required_score: int
     current_score: int
-    
+
     # Player resources
     money: int
     available_shop_cards: list[PlayingCard]
     available_jokers: list[Joker]
-    
+
     # History
     last_n_rounds: list[RoundResult]
 ```
@@ -115,18 +115,18 @@ from core.game_api import GameAgent, GameState
 
 class GreedyAgent(GameAgent):
     """Simple agent that prioritizes immediate score increase."""
-    
+
     def evaluate_decision(self, state: GameState) -> Decision:
         # Find the play that scores highest
         best_play = None
         best_score = 0
-        
+
         for possible_hand in self._enumerate_hand_subsets(state.current_hand):
             score = self._evaluate_play(possible_hand, state)
             if score > best_score:
                 best_score = score
                 best_play = possible_hand
-        
+
         return Decision(action="play", cards=best_play)
 ```
 
@@ -145,12 +145,12 @@ recorder = GameRecorder()
 for run_id in range(100):
     game = Game(seed=run_id)
     agent = GreedyAgent()
-    
+
     while not game.is_over():
         state = game.get_state()
         decision = agent.evaluate_decision(state)
         result = game.execute_decision(decision)
-        
+
         # Record what happened
         recorder.record(
             round_id=game.round_number,

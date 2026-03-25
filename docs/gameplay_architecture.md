@@ -6,26 +6,26 @@ Complete documentation of the game loop implementation structure, showing how al
 
 ### 1. Joker Removal & Effects
 Some jokers remove themselves or other jokers during or after scoring:
-- **Seltzer**: Destroys a random other joker when hand is scored
-- **Gros Michel**: Destroys itself after scoring, but still gives its multiplier
-- **Cavendish**: Expires after being used (or at round-end depending on state)
-- **Ice Cream**: Expires at the end of a round
-- **Turtle Bean**: Becomes eternal and permanent after one use
+- **Seltzer**: Retriggers played cards for the next 10 hands, then expires
+- **Gros Michel**: Has a 1 in 6 chance to be destroyed at end of round
+- **Cavendish**: Has a 1 in 1000 chance to be destroyed at end of round
+- **Ice Cream**: Loses chips each hand and eventually expires
+- **Turtle Bean**: Loses hand-size bonus each round until spent
 
 **Implementation**: `trigger_joker_ability()` receives a `joker_index` parameter to safely identify and remove jokers. It can call `run.remove_joker_at_index(joker_index)` directly to mutate the run state. Effect messages indicate what happened.
 
 ### 2. Triple-Tuple Return Values
 Joker abilities return `(chip_delta, mult_additive, mult_multiplicative, effect_messages)`:
 - **chip_delta** (int): Chips to ADD (e.g., Joker +10 chips)
-- **mult_additive** (float): Multiplier to ADD to base mult (e.g., Droll +0.5 for a 50% boost)
+- **mult_additive** (float): Multiplier to ADD to base mult (e.g., Droll +10 Mult)
 - **mult_multiplicative** (float): Multiplier to MULTIPLY by (e.g., Cavendish x3)
 - **effect_messages** (list[str]): Descriptions of what happened (for UI/logging)
 
 **Example Calculation**:
 - Hand base: 1.5x mult
-- Droll (additive +50%): 0.5
+- Droll (additive +10): 10.0
 - Cavendish (multiplicative x3): 3.0
-- Final: `(1.0 + 0.5) * 1.5 * 3.0 = 6.75x`
+- Final: `(1.5 + 10.0) * 3.0 = 34.5x`
 
 ### 3. Run Query Helpers
 New query methods on the Run class enable joker/voucher/consumable dependency checks:
@@ -49,7 +49,7 @@ The context dict passed to `trigger_joker_ability()` includes `joker_index` so t
 - **Smeared Joker**: Uses `run.has_joker()` to apply suit modifications
 - **Four Fingers**: Uses `run.has_joker()` to allow 4-card straights
 - **Shortcut**: Uses `run.has_joker()` to allow non-strict straights
-- **Smiley Face**: Uses `run.has_joker()` to allow 4-card flushes
+- **Smiley Face**: Face-card scorer (+5 mult per played face card), not a hand detector
 
 These checks determine what hand type gets detected, which affects which jokers trigger.
 

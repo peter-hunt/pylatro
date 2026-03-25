@@ -86,9 +86,18 @@ class Joker(DataType):  # sell price is cost / 2 rounded down
         Variable("lifecycle", Lifecycle, Lifecycle.NORMAL),
         Variable("stake_sticker", StakeSticker, StakeSticker.NONE),
 
+        # because base value might change upon Clearance Sale
+        # and extra added with Gift Card
+        Variable("extra_sell_value", int, 0),
         Variable("current_plus_chips", int, 0),
         Variable("current_plus_mult", int, 0),
         Variable("current_times_mult", Number, 0),
+
+        # Boss blind debuff (e.g., The Club)
+        Variable("debuffed", bool, False),
+        # hands_played for Loyalty Card
+        # current_mult for Ride the Bus
+        Variable("misc", dict, default_factory=dict),
     ]
 
     @classmethod
@@ -173,44 +182,49 @@ class Deck(DataType):
 
 
 class Consumable(DataType):
+    """Base class for consumable cards (tarot, planet, spectral)."""
     variables = [
         Variable("id", str),
-        Variable("card_type", str),  # tarot, planet, spectral
+        Variable("edition", Edition, Edition.BASE),
+        Variable("is_negative", bool, False),
+        Variable("extra_sell_value", int, 0),
     ]
 
     @classmethod
-    def create(cls, consumable_id: str, card_type: str | None = None):
-        """Create a consumable by ID, determining type from content if needed.
+    def create(cls, consumable_id: str, **kwargs):
+        """Create a consumable by ID.
 
         Args:
-            consumable_id: The consumable identifier (e.g., "the_magician", "mars").
-            card_type: Optional type override ("tarot", "planet", "spectral").
-                       If None, inferred from content repository.
+            consumable_id: The consumable identifier.
+            **kwargs: Additional fields (edition, etc.).
 
         Returns:
-            Consumable: A new Consumable instance.
+            Consumable: A new instance of the appropriate subclass.
 
         Raises:
             ValueError: If consumable_id not found in any content category.
 
         Example:
-            tarot = Consumable.create("the_magician")  # Type auto-detected as "tarot"
-            planet = Consumable.create("mars", card_type="planet")
+            tarot = Tarot.create("the_magician")
+            planet = Planet.create("mars")
+            negative_tarot = Tarot.create("the_magician", edition=Edition.NEGATIVE)
         """
-        if card_type is None:
-            # Infer type from content repository
-            from pylatro.content import get_tarots, get_planets, get_spectrals
+        return cls(id=consumable_id, **kwargs)
 
-            if consumable_id in get_tarots():
-                card_type = "tarot"
-            elif consumable_id in get_planets():
-                card_type = "planet"
-            elif consumable_id in get_spectrals():
-                card_type = "spectral"
-            else:
-                raise ValueError(f"Unknown consumable: {consumable_id}")
 
-        return cls(id=consumable_id, card_type=card_type)
+class Tarot(Consumable):
+    """Tarot consumable cards."""
+    pass
+
+
+class Planet(Consumable):
+    """Planet consumable cards."""
+    pass
+
+
+class Spectral(Consumable):
+    """Spectral consumable cards."""
+    pass
 
 
 class Voucher(DataType):

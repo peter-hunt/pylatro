@@ -176,6 +176,9 @@ Rental
 Hanging Chad
 Again!
 
+Wee Joker
+Upgrade! (on card trigger)
+
 [Voucher]
 [Voucher Icon]
 Redeemed!

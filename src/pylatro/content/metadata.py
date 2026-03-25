@@ -3,8 +3,22 @@ from pathlib import Path
 
 from pylatro.content.repository import (
     get_jokers, get_tarots, get_planets, get_planet_effects,
-    get_spectrals, get_decks, get_vouchers, get_enhancements, get_seals
+    get_spectrals, get_decks, get_vouchers, get_enhancements, get_seals,
+    get_editions, get_stickers
 )
+
+
+class MetadataNotFoundError(LookupError):
+    """Raised when metadata for a requested game object key is missing."""
+
+
+def _get_or_raise(mapping: dict[str, str], key: str, category: str, field: str) -> str:
+    """Return metadata value or raise a clean lookup error for unknown keys."""
+    if key in mapping:
+        return mapping[key]
+    raise MetadataNotFoundError(
+        f"Unknown {category} '{key}' while fetching {field}."
+    )
 
 
 def _get_metadata_dir():
@@ -35,6 +49,24 @@ def _load_joker_metadata():
                 JOKER_UNLOCK_REQS[name] = unlock_req
 
 
+def get_joker_display_name(joker: str) -> str:
+    """Get the display name for a joker key."""
+    _load_joker_metadata()
+    return _get_or_raise(JOKER_DISPLAY_NAMES, joker, "joker", "display name")
+
+
+def get_joker_effect(joker: str) -> str:
+    """Get the effect text for a joker key."""
+    _load_joker_metadata()
+    return _get_or_raise(JOKER_EFFECTS, joker, "joker", "effect")
+
+
+def get_joker_unlock_requirement(joker: str) -> str:
+    """Get the unlock requirement text for a joker key."""
+    _load_joker_metadata()
+    return _get_or_raise(JOKER_UNLOCK_REQS, joker, "joker", "unlock requirement")
+
+
 # === TAROTS ===
 TAROT_DISPLAY_NAMES = {}
 TAROT_EFFECTS = {}
@@ -48,6 +80,18 @@ def _load_tarot_metadata():
                 display_name, effect = part.split('\n', 1)
                 TAROT_DISPLAY_NAMES[name] = display_name
                 TAROT_EFFECTS[name] = effect
+
+
+def get_tarot_display_name(tarot: str) -> str:
+    """Get the display name for a tarot key."""
+    _load_tarot_metadata()
+    return _get_or_raise(TAROT_DISPLAY_NAMES, tarot, "tarot", "display name")
+
+
+def get_tarot_effect(tarot: str) -> str:
+    """Get the effect text for a tarot key."""
+    _load_tarot_metadata()
+    return _get_or_raise(TAROT_EFFECTS, tarot, "tarot", "effect")
 
 
 # === PLANETS ===
@@ -68,6 +112,18 @@ def _load_planet_metadata():
             PLANET_METADATA_EFFECTS[name] = effect
 
 
+def get_planet_display_name(planet: str) -> str:
+    """Get the display name for a planet key."""
+    _load_planet_metadata()
+    return _get_or_raise(PLANET_DISPLAY_NAMES, planet, "planet", "display name")
+
+
+def get_planet_metadata_effect(planet: str) -> str:
+    """Get the metadata effect text for a planet key."""
+    _load_planet_metadata()
+    return _get_or_raise(PLANET_METADATA_EFFECTS, planet, "planet", "effect")
+
+
 # === SPECTRALS ===
 SPECTRAL_DISPLAY_NAMES = {}
 SPECTRAL_EFFECTS = {}
@@ -81,6 +137,20 @@ def _load_spectral_metadata():
                 display_name, effect = part.split('\n', 1)
                 SPECTRAL_DISPLAY_NAMES[name] = display_name
                 SPECTRAL_EFFECTS[name] = effect
+
+
+def get_spectral_display_name(spectral: str) -> str:
+    """Get the display name for a spectral key."""
+    _load_spectral_metadata()
+    return _get_or_raise(
+        SPECTRAL_DISPLAY_NAMES, spectral, "spectral", "display name"
+    )
+
+
+def get_spectral_effect(spectral: str) -> str:
+    """Get the effect text for a spectral key."""
+    _load_spectral_metadata()
+    return _get_or_raise(SPECTRAL_EFFECTS, spectral, "spectral", "effect")
 
 
 # === DECKS ===
@@ -106,6 +176,24 @@ def _load_deck_metadata():
                 DECK_UNLOCK_CONDS[name] = unlock_cond
 
 
+def get_deck_display_name(deck: str) -> str:
+    """Get the display name for a deck key."""
+    _load_deck_metadata()
+    return _get_or_raise(DECK_DISPLAY_NAMES, deck, "deck", "display name")
+
+
+def get_deck_effect(deck: str) -> str:
+    """Get the effect text for a deck key."""
+    _load_deck_metadata()
+    return _get_or_raise(DECK_EFFECTS, deck, "deck", "effect")
+
+
+def get_deck_unlock_condition(deck: str) -> str:
+    """Get the unlock condition text for a deck key."""
+    _load_deck_metadata()
+    return _get_or_raise(DECK_UNLOCK_CONDS, deck, "deck", "unlock condition")
+
+
 # === VOUCHERS ===
 VOUCHER_DISPLAY_NAMES = {}
 VOUCHER_EFFECTS = {}
@@ -129,6 +217,28 @@ def _load_voucher_metadata():
                 VOUCHER_UNLOCK_CONDS[name] = unlock_cond
 
 
+def get_voucher_display_name(voucher: str) -> str:
+    """Get the display name for a voucher key."""
+    _load_voucher_metadata()
+    return _get_or_raise(
+        VOUCHER_DISPLAY_NAMES, voucher, "voucher", "display name"
+    )
+
+
+def get_voucher_effect(voucher: str) -> str:
+    """Get the effect text for a voucher key."""
+    _load_voucher_metadata()
+    return _get_or_raise(VOUCHER_EFFECTS, voucher, "voucher", "effect")
+
+
+def get_voucher_unlock_condition(voucher: str) -> str:
+    """Get the unlock condition text for a voucher key."""
+    _load_voucher_metadata()
+    return _get_or_raise(
+        VOUCHER_UNLOCK_CONDS, voucher, "voucher", "unlock condition"
+    )
+
+
 # === MODIFIERS ===
 ENHANCEMENT_DISPLAY_NAMES = {}
 ENHANCEMENT_EFFECTS = {}
@@ -142,6 +252,20 @@ def _load_enhancement_metadata():
                 display_name, effect = part.split('\n', 1)
                 ENHANCEMENT_DISPLAY_NAMES[name] = display_name
                 ENHANCEMENT_EFFECTS[name] = effect
+
+
+def get_enhancement_display_name(enhancement: str) -> str:
+    """Get the display name for an enhancement key."""
+    _load_enhancement_metadata()
+    return _get_or_raise(
+        ENHANCEMENT_DISPLAY_NAMES, enhancement, "enhancement", "display name"
+    )
+
+
+def get_enhancement_effect(enhancement: str) -> str:
+    """Get the effect text for an enhancement key."""
+    _load_enhancement_metadata()
+    return _get_or_raise(ENHANCEMENT_EFFECTS, enhancement, "enhancement", "effect")
 
 
 SEAL_DISPLAY_NAMES = {}
@@ -158,6 +282,70 @@ def _load_seal_metadata():
                 SEAL_EFFECTS[name] = effect
 
 
+def get_seal_display_name(seal: str) -> str:
+    """Get the display name for a seal key."""
+    _load_seal_metadata()
+    return _get_or_raise(SEAL_DISPLAY_NAMES, seal, "seal", "display name")
+
+
+def get_seal_effect(seal: str) -> str:
+    """Get the effect text for a seal key."""
+    _load_seal_metadata()
+    return _get_or_raise(SEAL_EFFECTS, seal, "seal", "effect")
+
+
+EDITION_DISPLAY_NAMES = {}
+EDITION_EFFECTS = {}
+
+
+def _load_edition_metadata():
+    if not EDITION_DISPLAY_NAMES:
+        editions = get_editions()
+        with open(_get_metadata_dir() / "modifiers" / "editions.txt") as file:
+            for name, part in zip(editions, file.read().strip().split('\n\n')):
+                display_name, effect = part.split('\n', 1)
+                EDITION_DISPLAY_NAMES[name] = display_name
+                EDITION_EFFECTS[name] = effect
+
+
+def get_edition_display_name(edition: str) -> str:
+    """Get the display name for an edition key."""
+    _load_edition_metadata()
+    return _get_or_raise(EDITION_DISPLAY_NAMES, edition, "edition", "display name")
+
+
+def get_edition_effect(edition: str) -> str:
+    """Get the effect text for an edition key."""
+    _load_edition_metadata()
+    return _get_or_raise(EDITION_EFFECTS, edition, "edition", "effect")
+
+
+STICKER_DISPLAY_NAMES = {}
+STICKER_EFFECTS = {}
+
+
+def _load_sticker_metadata():
+    if not STICKER_DISPLAY_NAMES:
+        stickers = get_stickers()
+        with open(_get_metadata_dir() / "modifiers" / "stickers.txt") as file:
+            for name, part in zip(stickers, file.read().strip().split('\n\n')):
+                display_name, effect = part.split('\n', 1)
+                STICKER_DISPLAY_NAMES[name] = display_name
+                STICKER_EFFECTS[name] = effect
+
+
+def get_sticker_display_name(sticker: str) -> str:
+    """Get the display name for a sticker key."""
+    _load_sticker_metadata()
+    return _get_or_raise(STICKER_DISPLAY_NAMES, sticker, "sticker", "display name")
+
+
+def get_sticker_effect(sticker: str) -> str:
+    """Get the effect text for a sticker key."""
+    _load_sticker_metadata()
+    return _get_or_raise(STICKER_EFFECTS, sticker, "sticker", "effect")
+
+
 # Public API: lazy load all metadata
 def ensure_loaded():
     """Ensure all metadata is loaded."""
@@ -169,3 +357,5 @@ def ensure_loaded():
     _load_voucher_metadata()
     _load_enhancement_metadata()
     _load_seal_metadata()
+    _load_edition_metadata()
+    _load_sticker_metadata()

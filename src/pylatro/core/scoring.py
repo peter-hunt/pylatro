@@ -33,7 +33,9 @@ def calculate_card_chips(card: PlayingCard) -> int:
     Example:
         A card with rank 5 (base 5 chips) and GOLD enhancement (+5) = 10 chips.
     """
-    pass
+    chips = {1: 11, 11: 10, 12: 10, 13: 10}.get(card.rank, card.rank)
+    # ! not finished
+    return chips
 
 
 def calculate_card_mult(card: PlayingCard) -> tuple[float, float, float]:
@@ -194,8 +196,13 @@ def evaluate_hand(
     2. Get poker hand base chips/mult using score_poker_hand().
     3. Apply edition modifiers to cards and jokers using apply_edition_modifier().
        This returns (chip_bonus, mult_additive, mult_multiplicative). Handle each component.
-    4. **Trigger joker abilities in order** using abilities.trigger_joker_ability()
-       with event="on_hand_score". Pass joker_index in context dict.
+     4. **Trigger joker abilities in order** using abilities.trigger_joker_ability()
+         with event="on_hand_score". Build context via run.build_scoring_context()
+         (or run.build_ability_context("on_hand_score", ...)) so the payload uses
+         the uniform key set for every ability event, and pass run explicitly as
+         the trigger function argument. Pass hand_base_chips and hand_base_mult
+         (from score_poker_hand()) so jokers can read precomputed hand values
+         directly from context instead of re-deriving them.
        - CRITICAL: Joker abilities return effect messages but DO NOT mutate run.jokers.
        - trigger_joker_ability() returns (chip_delta, mult_additive, mult_multiplicative, effect_messages).
        - Collect all effects (chips, mults, messages) into a list.
@@ -222,11 +229,11 @@ def evaluate_hand(
       base_mult = 1.5 + 0.5 + 10 = 12.0
       final_mult = 12.0 * 3.0 = 36.0x total
 
-    Implementation notes:
-    - When calling trigger_joker_ability(), ensure context dict includes:
-      - joker_index: int (position in jokers list)
-      - run: Run object
-      - played_cards, hand_type, current_chips, current_mult, etc.
+        Implementation notes:
+        - When calling trigger_joker_ability(), pass run explicitly and use Run
+            context builders so all payload keys are present even when values are not
+            applicable for that event. This avoids per-event key drift and keeps
+            ability docs centralized.
     - Card effects (enhancements, seals, editions) can include cards in the
       played hand AND cards in hand_cards (for effects that reference hand state).
       Choose how to structure this in your implementation.

@@ -13,6 +13,17 @@ from pylatro.content.repository import (
     get_stakes,
     get_poker_hands, get_poker_hand_bases,
 )
+from pylatro.content.metadata import (
+    MetadataNotFoundError,
+    get_joker_display_name, get_joker_effect, get_joker_unlock_requirement,
+    get_tarot_display_name, get_tarot_effect,
+    get_planet_display_name, get_planet_metadata_effect,
+    get_spectral_display_name, get_spectral_effect,
+    get_deck_display_name, get_deck_effect, get_deck_unlock_condition,
+    get_voucher_display_name, get_voucher_effect, get_voucher_unlock_condition,
+    get_enhancement_display_name, get_enhancement_effect,
+    get_seal_display_name, get_seal_effect,
+)
 
 __all__ = [
     # Jokers
@@ -37,4 +48,14 @@ __all__ = [
     "get_stakes",
     # Poker Hands
     "get_poker_hands", "get_poker_hand_bases",
+    # Metadata Accessors
+    "MetadataNotFoundError",
+    "get_joker_display_name", "get_joker_effect", "get_joker_unlock_requirement",
+    "get_tarot_display_name", "get_tarot_effect",
+    "get_planet_display_name", "get_planet_metadata_effect",
+    "get_spectral_display_name", "get_spectral_effect",
+    "get_deck_display_name", "get_deck_effect", "get_deck_unlock_condition",
+    "get_voucher_display_name", "get_voucher_effect", "get_voucher_unlock_condition",
+    "get_enhancement_display_name", "get_enhancement_effect",
+    "get_seal_display_name", "get_seal_effect",
 ]

@@ -22,6 +22,15 @@ class RunStats(DataType):
         # hands_played will be populated from content.get_poker_hands()
         Variable("hands_played", dict, default_factory=dict),
 
+        # Joker Usage
+        Variable("consecutive_hands_without_face", int, 0),  # Ride the Bus
+        Variable("gros_michel_extinct", bool, False),  # Cavendish
+        Variable("unique_hands_played_this_round", set,
+                 default_factory=set),  # Card Sharp
+        Variable("tarots_used", set, default_factory=set),  # Fortune Teller
+        Variable("blinds_skipped", set, default_factory=set),  # Throwback
+        Variable("unique_planets_used", set, default_factory=set),  # Satellite
+
         # Joker Unlock Req
         Variable("consecutive_rounds_won_with_one_hand", int, 0),  # Troubadour
         Variable("had_more_than_4_jokers", bool, False),  # Invisible Joker
@@ -39,9 +48,39 @@ class RunStats(DataType):
 # current run
 class Run(DataType):
     """Represents the current game run state."""
+    # Canonical key set for ALL joker/ability event payloads.
+    # Note: run itself is passed explicitly to trigger functions.
+    # Every generated context should include every key here.
+    # Fields not used by a given event must be set to None.
+    ABILITY_CONTEXT_KEYS = (  # those will eventually be pruned if unused
+        "event",  # used
+        "joker",
+        "joker_index",
+        "round_number",
+        "blind_name",
+        "played_cards",
+        "scored_cards",  # used, lighter than deriving from played_cards and scored_map
+        "scored_map",
+        "hand_type",
+        "hand_base_chips",
+        "hand_base_mult",
+        "hand_level",
+        "current_chips",
+        "current_mult",
+        "card",
+        "played_index",
+        "consumable",
+        "target_card",
+        "round_stats",
+        "discarded_cards",
+        "is_first_hand",  # probably current & total hand count instead
+        "hand_cards",
+    )
+
     variables = [
         Variable("deck", Deck),
 
+        # Runtime round counters (mutable during a round).
         Variable("hands", int),
         Variable("discards", int),
         Variable("money", int),
@@ -166,15 +205,15 @@ class Run(DataType):
         """
         pass
 
-    def remove_joker(self, joker_name: str) -> bool:
+    def remove_joker(self, joker_id: str) -> bool:
         """
-        Remove a Joker by name from the jokers list.
+        Remove a Joker by id from the jokers list.
 
-        Searches `self.jokers` for a Joker with matching `name` attribute and
+        Searches `self.jokers` for a Joker with matching `id` attribute and
         removes the first match. Returns True if found and removed, False if not found.
 
         Args:
-            joker_name: The name of the joker to remove (e.g., "Joker", "Droll").
+            joker_id: The id of the joker to remove (e.g., "Joker", "Droll").
 
         Returns:
             bool: True if removed, False if not found.
@@ -198,31 +237,31 @@ class Run(DataType):
         """
         pass
 
-    def get_joker(self, joker_name: str) -> Joker | None:
+    def get_joker(self, joker_id: str) -> Joker | None:
         """
-        Query a Joker by name.
+        Query a Joker by id.
 
-        Searches `self.jokers` for a Joker with matching `name` and returns the
+        Searches `self.jokers` for a Joker with matching `id` and returns the
         first match, or None if not found.
 
         Args:
-            joker_name: The name of the joker to find.
+            joker_id: The id of the joker to find.
 
         Returns:
             Joker | None: The Joker instance, or None if not found.
         """
         pass
 
-    def get_joker_index(self, joker_name: str) -> int | None:
+    def get_joker_index(self, joker_id: str) -> int | None:
         """
-        Find the index of a Joker by name.
+        Find the index of a Joker by id.
 
-        Searches `self.jokers` for a Joker with matching `name` and returns its
+        Searches `self.jokers` for a Joker with matching `id` and returns its
         index, or None if not found. Useful for joker effects that need to
         identify and modify themselves or other specific jokers.
 
         Args:
-            joker_name: The name of the joker to find.
+            joker_id: The id of the joker to find.
 
         Returns:
             int | None: The 0-indexed position, or None if not found.
@@ -260,16 +299,16 @@ class Run(DataType):
         """
         pass
 
-    def update_hand_level(self, hand_name: str, delta: int) -> None:
+    def update_hand_level(self, hand_id: str, delta: int) -> None:
         """
         Update the level of a poker hand type.
 
-        Adds `delta` to `self.hand_levels[hand_name]`. If hand_name not yet in
+        Adds `delta` to `self.hand_levels[hand_id]`. If hand_id not yet in
         the dict, initializes to 0 first. Called when player levels up a poker hand
         (via Planet consumable or other effects).
 
         Args:
-            hand_name: The poker hand type name (e.g., "pair", "three_of_a_kind").
+            hand_id: The poker hand type id (e.g., "pair", "three_of_a_kind").
             delta: The amount to add (can be negative, but shouldn't go below 1).
         """
         pass
@@ -360,15 +399,15 @@ class Run(DataType):
         """
         pass
 
-    def get_voucher(self, voucher_name: str) -> Voucher | None:
+    def get_voucher(self, voucher_id: str) -> Voucher | None:
         """
-        Query a voucher by name.
+        Query a voucher by id.
 
-        Searches `self.vouchers` for a voucher with matching `name` and returns
+        Searches `self.vouchers` for a voucher with matching `id` and returns
         the first match, or None if not found.
 
         Args:
-            voucher_name: The name of the voucher (e.g., "Seed Money").
+            voucher_id: The id of the voucher (e.g., "Seed Money").
 
         Returns:
             Voucher | None: The Voucher instance, or None if not found.
@@ -379,7 +418,7 @@ class Run(DataType):
     # GAME STATE TRACKING
     # ==========================================================================
 
-    def set_current_blind(self, blind_name: str, blind_chips: int) -> None:
+    def set_current_blind(self, blind_id: str, blind_chips: int) -> None:
         """
         Store the current blind for this ante.
 
@@ -392,7 +431,7 @@ class Run(DataType):
         and pass it to evaluate_hand() instead.
 
         Args:
-            blind_name: The blind identifier (e.g., "Small Blind", "Big Blind").
+            blind_id: The blind identifier (e.g., "Small Blind", "Big Blind").
             blind_chips: The chip requirement to beat this blind.
         """
         pass
@@ -401,8 +440,10 @@ class Run(DataType):
         """
         Advance to the next round (mostly bookkeeping).
 
-        Increments `self.ante` and `self.round`. Resets `hands` and `discards`
-        to their starting values (typically 5 hands, 1 discard for most antes).
+        Increments `self.ante` and `self.round`. Runtime counters (`hands`,
+        `discards`) remain mutable round-state values; totals are computed
+        dynamically via `hands_total` and `discards_total` properties.
+
         Optionally updates `hand_size` if provided (some bets change hand size).
 
         Clears `hand_cards` (player will redraw from deck). May also clear
@@ -414,10 +455,162 @@ class Run(DataType):
         pass
 
     # ==========================================================================
+    # UNIFORM ABILITY CONTEXT BUILDERS
+    # ==========================================================================
+
+    def build_ability_context(self, event: str, **overrides: any) -> dict[str, any]:
+        """
+        Build a canonical joker/ability context dict with a uniform key set.
+
+        This is the single source of truth for ability context structure.
+        All event contexts should be created from this method (or wrappers that
+        delegate to it) so abilities can rely on stable keys across events.
+
+        Contract:
+        - Every key in Run.ABILITY_CONTEXT_KEYS is always present.
+        - Event-inapplicable fields are explicitly None.
+                - The active Run is NOT stored in this dict; pass run explicitly to
+                    trigger functions.
+        - Callers can provide event-specific values via keyword overrides.
+
+        Common usage:
+        - on_hand_score: provide played_cards/scored_cards/scored_map/hand_type/
+          hand_base_chips/hand_base_mult/hand_level/current_chips/current_mult.
+          Use build_scoring_context() which auto-populates hand_level from run.hand_levels.
+        - at_round_end: provide round_number and joker_index; leave scoring lists as None.
+        - on_discard: provide discarded_cards.
+        - on_consumable_use: provide consumable and optional target_card.
+
+        Args:
+            event: Ability event name (for example: "on_hand_score", "at_round_end").
+            **overrides: Event-specific values to override defaults.
+
+        Returns:
+            dict[str, any]: Canonical context dict with all uniform keys present.
+        """
+        context = {key: None for key in self.ABILITY_CONTEXT_KEYS}
+        context["event"] = event
+        context.update(overrides)
+        return context
+
+    def build_scoring_context(
+        self,
+        *,
+        joker_index: int | None = None,
+        played_cards: list[PlayingCard] | None = None,
+        scored_cards: list[PlayingCard] | None = None,
+        scored_map: dict | None = None,
+        hand_type: str | None = None,
+        hand_base_chips: int | None = None,
+        hand_base_mult: float | None = None,
+        current_chips: int | None = None,
+        current_mult: float | None = None,
+    ) -> dict[str, any]:
+        """
+        Convenience wrapper for a standard on_hand_score ability context.
+
+        This keeps call sites concise while still enforcing the uniform context
+        schema from build_ability_context().
+
+        Args:
+            joker_index: Position of the joker currently being evaluated.
+            played_cards: Full played selection before scoring filters.
+            scored_cards: Cards that actually score for this hand.
+            scored_map: Optional precomputed per-card score metadata.
+            hand_type: Detected poker hand identifier (e.g. "flush", "pair").
+            hand_base_chips: Base chip value for this hand type (from score_poker_hand()).
+            hand_base_mult: Base multiplier for this hand type (from score_poker_hand()).
+            current_chips: Chips accumulated before current joker.
+            current_mult: Mult accumulated before current joker.
+
+        Returns:
+            dict[str, any]: Canonical context for event="on_hand_score".
+        """
+        return self.build_ability_context(
+            "on_hand_score",
+            joker_index=joker_index,
+            played_cards=played_cards,
+            scored_cards=scored_cards,
+            scored_map=scored_map,
+            hand_type=hand_type,
+            hand_base_chips=hand_base_chips,
+            hand_base_mult=hand_base_mult,
+            hand_level=self.hand_levels.get(hand_type) if hand_type else None,
+            current_chips=current_chips,
+            current_mult=current_mult,
+            hand_cards=self.hand_cards,
+            round_number=self.round,
+        )
+
+    def build_round_end_context(
+        self,
+        *,
+        joker_index: int | None = None,
+        round_stats: dict | None = None,
+    ) -> dict[str, any]:
+        """
+        Convenience wrapper for a standard at_round_end ability context.
+
+        Non-at_round_end fields are intentionally left as None through the canonical
+        context template so end-of-round triggers share the same key set used by
+        scoring contexts.
+
+        Args:
+            joker_index: Position of the joker currently being evaluated.
+            round_stats: Optional round summary payload for money/economy effects.
+
+        Returns:
+            dict[str, any]: Canonical context for event="at_round_end".
+        """
+        return self.build_ability_context(
+            "at_round_end",
+            joker_index=joker_index,
+            round_number=self.round,
+            round_stats=round_stats,
+            hand_cards=self.hand_cards,
+        )
+
+    # ==========================================================================
     # QUERY HELPERS (READ-ONLY)
     # ==========================================================================
 
-    def has_joker(self, joker_name: str) -> bool:
+    @property
+    def hands_total(self) -> int:
+        """
+        Dynamic total hands available for the current round.
+
+        Intended final behavior:
+        - Determine the baseline from deck/stake defaults.
+        - Apply active voucher/joker/tag modifiers from current run state.
+        - Return a non-negative total for round hand capacity.
+
+        Note:
+            Structural stub only. No calculation logic is implemented yet.
+
+        Returns:
+            int: Computed hand total for the current round (implementation pending).
+        """
+        pass
+
+    @property
+    def discards_total(self) -> int:
+        """
+        Dynamic total discards available for the current round.
+
+        Intended final behavior:
+        - Determine the baseline from deck/stake defaults.
+        - Apply active voucher/joker/tag modifiers from current run state.
+        - Return a non-negative total for round discard capacity.
+
+        Note:
+            Structural stub only. No calculation logic is implemented yet.
+
+        Returns:
+            int: Computed discard total for the current round (implementation pending).
+        """
+        pass
+
+    def has_joker(self, joker_id: str, ignore_debuff: bool = False) -> bool:
         """
         Check if a Joker with the given name exists in the run.
 
@@ -427,14 +620,18 @@ class Run(DataType):
         - Jokers that scale with joker count
 
         Args:
-            joker_name: The joker name to check.
+            joker_id: The joker id to check.
 
         Returns:
             bool: True if found, False otherwise.
         """
-        pass
+        for joker in self.jokers:
+            if joker.id == joker_id:
+                if ignore_debuff or not joker.debuffed:
+                    return True
+        return False
 
-    def count_jokers(self, joker_name: str | None = None) -> int:
+    def count_jokers(self, joker_id: str | None = None) -> int:
         """
         Count jokers by name, or total joker count if name is None.
 
@@ -444,7 +641,7 @@ class Run(DataType):
         - Effects that check for specific duplicates
 
         Args:
-            joker_name: If provided, count only jokers with this name.
+            joker_id: If provided, count only jokers with this name.
                        If None, count all jokers.
 
         Returns:

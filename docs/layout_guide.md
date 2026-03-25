@@ -82,7 +82,7 @@ def layout_play_new_run(ctx: CLIContext, renderer, decks_data: Dict) -> LayoutRe
         # Instead of progress dots, show status line:
         status = decks_data[deck_name].get('status', 'Locked')
         deck_list += f"{marker} {deck_name:<25} [{status}]\n"  # <- modified
-    
+
     # ... rest of function
 ```
 
@@ -100,7 +100,7 @@ Edit `LAYOUT["left_column_width"]` and `["right_column_width"]` in `templates.py
 
 ### 3. Add ASCII art/decorations
 ```python
-content = "   ╔══════════════════╗\n"
+content =  "   ╔══════════════════╗\n"
 content += "   ║  CUSTOM HEADER   ║\n"
 content += "   ╚══════════════════╝\n"
 content += renderer.render_list(items, ...)

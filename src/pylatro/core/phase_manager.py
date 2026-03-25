@@ -220,7 +220,7 @@ def shop_phase(run: Run) -> dict:
     - Player can also decline to buy anything; shop phase ends when player
       confirms done shopping.
     - Some shop actions trigger Joker abilities (e.g., "Showman" triggers when
-      you buy a consumable). Call abilities.trigger_joker_ability(..., event="on_shop", ...)
+      you buy a consumable). Call abilities.trigger_joker_ability(..., run, event="on_shop", ...)
       at appropriate points.
 
     Args:
@@ -309,7 +309,7 @@ def advance_to_next_round(run: Run) -> None:
     """
     Transition from one ante to the next (after shop phase completes).
 
-    Called after shop phase is done. This is where round-end Joker effects trigger.
+    Called after shop phase is done. This is where at_round_end Joker effects trigger.
 
     SEQUENCE (full hand → next hand):
     1. play_hand_phase() → score hand, trigger on_hand_score joker abilities,
@@ -323,17 +323,20 @@ def advance_to_next_round(run: Run) -> None:
     - All joker removals from on_hand_score are complete
     - All seal income is calculated and added to run.money
     - Player has finished shopping
-    - Now trigger at_round_end joker effects and prepare next hand
+    - Now trigger at_round_end Joker effects and prepare next hand
 
     Steps:
     1. Call run.increment_round() to update ante, round, reset hands/discards,
        clear hand_cards.
     2. Refill deck.draw if needed (combine played/discarded back in, reshuffle).
     3. Redraw run.hand_size cards into hand_cards using run.draw_card().
-    4. Trigger round-end Joker abilities: iterate through run.jokers and
-       call abilities.trigger_joker_at_round_end(joker, joker_index, context).
+     4. Trigger at_round_end Joker abilities: iterate through run.jokers and
+       call abilities.trigger_joker_at_round_end(joker, joker_index, run, context).
+       Build context via run.build_round_end_context(...) so at_round_end and
+       scoring events share the same uniform key schema, while run is passed
+       directly to the trigger function.
        - SAFE TO ITERATE: All on_hand_score removals are already complete from step 3.
-       - Some jokers expire on round-end (Ice Cream → will_expire=True).
+      - Some jokers expire on at_round_end (Ice Cream -> will_expire=True).
        - Some become permanent/eternal (Turtle Bean → state_mutations["became_eternal"]=True).
        - Collect all effects first, then apply mutations (removals) AFTER iteration.
        - Note: Track indices carefully if mutations occur (iterate backwards or rebuild).
@@ -348,7 +351,7 @@ def advance_to_next_round(run: Run) -> None:
       * Call trigger_joker_at_round_end() for each joker
       * Collect results and check effect.will_expire and effect.target_removal_index
       * Apply all removals at once AFTER iteration (backwards is safer)
-    - Some Jokers create cards or modify deck state on round-end; handle those
+    - Some Jokers create cards or modify deck state on at_round_end; handle those
       via trigger_joker_at_round_end().
     - Perishable Jokers have durations; decrement or check expiry here.
     - Seasonal vouchers might expire; check and remove if needed.

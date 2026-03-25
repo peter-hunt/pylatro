@@ -6,3 +6,6 @@ Scoring needs to know if boss ability is triggered
 Structured data for blind ability
 
 Free items can be bought even when money is negative
+
+Discovering legendary joker triggers unlock sequence
+Swashbuckler is affected by Clearance Sale

@@ -6,7 +6,7 @@ Demonstrates how to work with Pylatro's game entity models:
 - Understanding card state and modifications
 """
 
-from pylatro.core.models import PlayingCard, Joker, Deck, Consumable, Enhancement, Seal, Edition, Lifecycle, StakeSticker
+from pylatro.core.models import PlayingCard, Joker, Deck, Tarot, Planet, Spectral, Enhancement, Seal, Edition, Lifecycle, StakeSticker
 
 
 def example_playing_cards():
@@ -147,15 +147,15 @@ def example_consumable_creation():
     print("Example 6: Consumable Creation")
     print("=" * 60)
 
-    # Create consumables by ID, type is auto-detected from content
-    tarot = Consumable.create("the_magician")
-    planet = Consumable.create("mars")
-    spectral = Consumable.create("wraith")
+    # Create consumables by type-specific classes
+    tarot = Tarot.create("the_magician")
+    planet = Planet.create("mars")
+    spectral = Spectral.create("wraith")
 
     print(f"Created consumables from content:")
-    print(f"  {tarot.id}: Type {tarot.card_type}")
-    print(f"  {planet.id}: Type {planet.card_type}")
-    print(f"  {spectral.id}: Type {spectral.card_type}")
+    print(f"  {tarot.id}: {tarot.__class__.__name__}")
+    print(f"  {planet.id}: {planet.__class__.__name__}")
+    print(f"  {spectral.id}: {spectral.__class__.__name__}")
     print()
 
 

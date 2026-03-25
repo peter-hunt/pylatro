@@ -1,0 +1,61 @@
+All kinds of card drawing
+
+Erratic Deck: generation
+
+Shop and Rerolls
+
+Card Packs: Playing, Buffoon, Arcane, Spectral
+
+Tarots and Spectrals: hand drawing
+
+Joker
+8 Ball: 1 in 4, Tarot Card Pull for each played 8
+Misprint: +0-23 Mult
+Gros Michel: 1 in 6 Extinct!
+Business Card: 1 in 2 for face cards to give $2 when scored
+Space Joker: 1 in 4 to upgrade level of played poker hand
+Sixth Sense: Spectral Card Pull when the first hand of round is a single 6
+Superposition: Tarot Card Pull when a poker hand contains an Ace and a Straight
+# investigate if secret hands and same hands can be used
+To Do List: The Poker Hand per round to earn $4 when played
+Cavendish: 1 in 1000 Extinct!
+Madness: The Joker to randomly destroy
+# investigate if 1 joker can be spawned
+Riff-Raff: 2 common jokers created per blind start if there is space
+Vagabond: Tarot Card Pull when hand played with $4 or less
+Reserved Parking: 1 in 2 for each face card held in hand each hand played to give $1
+Hallucination: 1 in 2, Tarot Card Pull upon any Booster Pack opened
+Ancient Joker: The Poker Suit per round to give x1.5 Mult per when scored
+Castle: The Poker Suit per round to give +3 Chips to card when discarded
+Certificate: The Playing Card with a Random Seal to add to hand upon each round start
+Bloodstone: 1 in 2 for each played Heart to give x1.5 Mult
+Blueprint: copying abilities with randomness
+The Idol: The Poker Rank and Suit to give x2 Mult per when scored
+Invisible Joker: The Joker to randomly duplicate when sold after 2 rounds
+Brainstorm: copying abilities with randomness
+Cartomancer: Tarot Card Pull upon each blind start
+Perkeo: Consumable Card at random in possession to copy at the end of shop
+
+Tarot
+The High Priestess: 2 random planets
+The Emperor: 2 random tarots
+The Wheel of Fortune: 1 in 4 chance to add Foil, Holographic, or Polychrome to random Joker
+Judgement: a random Joker card
+
+Spectral
+Familiar: 1 random card destroyed, 3 random enhanced faces added
+Grim: 1 random card destroyed, 2 random enhanced aces added
+Incantation: 1 random card destroyed, 4 random enhanced numbers added
+Aura: Foil, Holographic, or Polychrome added to 1 selected card in hand
+Wraith: Rare Joker created at random
+Sigil: Suit at random for all cards to be converted into
+Ouija: Rank at random for all cards to be converted into
+Ectoplasm: Joker at random to add Negative
+Immolate: 5 cards destroyed at random
+Ankh: Joker at random to copy
+Hex: Joker at random to add Polychrome
+The Soul: Legendary Joker at random to create
+
+Playing Card
+Lucky
+Glass
