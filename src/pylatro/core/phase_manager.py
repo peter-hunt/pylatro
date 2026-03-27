@@ -208,6 +208,12 @@ def shop_phase(run: Run) -> dict:
     - run.seed: If set, seeded RNG determines shop contents for reproducibility.
     - Player profile unlocks: Only unlocked Jokers, consumables, etc. appear.
     - Vouchers applied: Some vouchers affect shop prices or offerings.
+    - Tags: Some tags guarantee items (Buffoon Tag, Coupon Tag, etc.)
+
+    Special Cases (from Balatro):
+    - Ante 1: Always includes Buffoon Pack (normal) before RNG packs
+    - Tag guarantees: Buffoon Tag (free Mega Buffoon), Charm Tag (free Mega Arcana),
+      Coupon Tag (initial items free), D6 Tag (rerolls $0), etc.
 
     This function returns the shop state; actual purchasing happens in a loop
     where the player selects items and calls purchase logic externally
@@ -241,7 +247,73 @@ def shop_phase(run: Run) -> dict:
         Player browses and selects items. Each purchase calls run.spend_money()
         and run.add_*() methods. When done, returns to advance_to_next_round().
     """
-    pass
+    # Generate booster packs: guaranteed first, then RNG-based
+    booster_packs = []
+
+    # Add ante-1 guarantee: always include Buffoon Pack (normal) in first shop
+    if run.ante == 1 and not run.first_shop_packs:
+        # First time shop in this run: add Buffoon Pack
+        booster_packs.append(("buffoon", "normal"))
+    elif run.first_shop_packs:
+        # Use pre-populated first shop packs (from initialization)
+        booster_packs.extend(run.first_shop_packs)
+        run.first_shop_packs = []  # Clear for next shop
+
+    # Add tag-guaranteed packs
+    if "buffoon_tag_pending" in run.pending_tag_effects:
+        booster_packs.append(("buffoon", "mega"))
+        del run.pending_tag_effects["buffoon_tag_pending"]
+    if "charm_tag_pending" in run.pending_tag_effects:
+        booster_packs.append(("arcana", "mega"))
+        del run.pending_tag_effects["charm_tag_pending"]
+    if "ethereal_tag_pending" in run.pending_tag_effects:
+        booster_packs.append(("spectral", "mega"))
+        del run.pending_tag_effects["ethereal_tag_pending"]
+    if "meteor_tag_pending" in run.pending_tag_effects:
+        booster_packs.append(("celestial", "mega"))
+        del run.pending_tag_effects["meteor_tag_pending"]
+    if "standard_tag_pending" in run.pending_tag_effects:
+        booster_packs.append(("standard", "mega"))
+        del run.pending_tag_effects["standard_tag_pending"]
+
+    # Then add RNG-based packs to fill remaining slots (typically 1 per shop)
+    pack_slots = 3  # Default shop usually has 1 free pack slot after guaranteed items
+    for i in range(pack_slots - len(booster_packs)):
+        seed = f"{run.seed}_booster_ante{run.ante}_pack{i}" if run.seed else None
+        # TODO: use rng.select_booster_pack_type(seed) to generate additional packs
+        # For now, this is a placeholder
+        pass
+
+    # Generate guaranteed shop jokers (from tags)
+    guaranteed_jokers = []
+
+    # Edition-based joker guarantees (from tags: Foil, Holographic, etc.)
+    if run.guaranteed_shop_jokers:
+        guaranteed_jokers.extend(run.guaranteed_shop_jokers)
+        run.guaranteed_shop_jokers = []  # Clear for next shop
+
+    # Rare/Uncommon joker guarantees
+    free_joker_slots = run.free_joker_count
+    run.free_joker_count = 0  # Reset for next shop
+
+    # Coupon Tag: make initial items free
+    coupon_active = run.coupon_tag_active
+    run.coupon_tag_active = False  # Reset for next shop
+
+    # TODO: Implement full shop generation logic:
+    # 1. Generate joker list (3 items, with guarantees first)
+    # 2. Generate consumable list (2 items)
+    # 3. Generate voucher list (1 item)
+    # 4. Assign prices based on ante, editions, and tags
+    # 5. Apply free items for Coupon Tag
+
+    return {
+        "jokers": guaranteed_jokers,  # TODO: add RNG jokers
+        "consumables": [],  # TODO: generate consumable list
+        "vouchers": [],  # TODO: generate voucher list
+        "booster_packs": booster_packs,
+        "prices": {},  # TODO: price mapping
+    }
 
 
 # =============================================================================

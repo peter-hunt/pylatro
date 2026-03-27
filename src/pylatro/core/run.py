@@ -1,7 +1,8 @@
 """Game state tracking: current run and statistics."""
+from dataclasses import dataclass
 from pylatro.lib.datatype import DataType, Variable
 
-from pylatro.core.models import PlayingCard, Joker, Deck, Consumable, Voucher, Tag
+from pylatro.core.models import PlayingCard, Joker, Deck, Consumable, Voucher, Tag, Edition
 
 
 class RunStats(DataType):
@@ -27,9 +28,10 @@ class RunStats(DataType):
         Variable("gros_michel_extinct", bool, False),  # Cavendish
         Variable("unique_hands_played_this_round", set,
                  default_factory=set),  # Card Sharp
-        Variable("tarots_used", set, default_factory=set),  # Fortune Teller
-        Variable("blinds_skipped", set, default_factory=set),  # Throwback
-        Variable("unique_planets_used", set, default_factory=set),  # Satellite
+        # Variable("tarots_used", set, default_factory=set),  # Fortune Teller
+        Variable("blinds_skipped_by_throwback", set,
+                 default_factory=set),  # Throwback
+        # Variable("unique_planets_used", set, default_factory=set),  # Satellite
 
         # Joker Unlock Req
         Variable("consecutive_rounds_won_with_one_hand", int, 0),  # Troubadour
@@ -42,40 +44,76 @@ class RunStats(DataType):
         Variable("tags_received", int, 0),  # Total tag instances received
         # Garbage Tag: $1 per unused discard
         Variable("unused_discards", int, 0),
+
+        # Profile Stats
+        Variable("most_money", int, 0),
+
+        # Card Stats
+        Variable("card_rounds", dict, default_factory=dict),
+        Variable("consumables_used", dict, default_factory=dict),
+        Variable("tarots_used", dict, default_factory=dict),  # Fortune Teller
+        Variable("planets_used", dict, default_factory=dict),  # Satellite
+        Variable("spectrals_used", dict, default_factory=dict),
+
+        # Joker Unlock Req
+        Variable("face_cards_played", int, 0),  # Sock and Buskin
+        Variable("cards_sold", int, 0),  # Burnt Joker
+        Variable("joker_cards_sold", int, 0),  # Swashbuckler
+        # Voucher Unlock Req
+        Variable("money_spent_at_shop", int, 0),  # Overstock Plus
+        Variable("rerolls_done", int, 0),  # Reroll Glut
+        Variable("booster_pack_tarots_used", int, 0),  # Omen Globe
+        Variable("booster_pack_planets_used", int, 0),  # Observatory
+        Variable("tarot_cards_bought", int, 0),  # Tarot Tycoon
+        Variable("planet_cards_bought", int, 0),  # Planet Tycoon
+        Variable("consecutive_rounds_interest_maxed", int, 0),  # Money Tree
+        Variable("blank_redeemed", int, 0),  # Antimatter
+        Variable("playing_cards_bought", int, 0),  # Illusion
     ]
 
 
-# current run
+# =============================================================================
+# ABILITY CONTEXT (used by joker/ability triggers)
+# =============================================================================
+
+@dataclass
+class AbilityContext:
+    """
+    Ability evaluation context: passed to joker triggers and ability effects.
+
+    Minimal set of fields required for current joker abilities.
+    Fields are None when not applicable to the event type.
+    Run itself is passed explicitly to trigger functions, not stored here.
+
+    Potential future fields (add as needed when implementing new joker families):
+    - joker: The triggering Joker instance
+    - round_number: Current round/ante
+    - blind_name: Name of current blind
+    - scored_map: Precomputed per-card score metadata
+    - hand_base_chips: Base chip value for poker hand type
+    - hand_base_mult: Base multiplier for poker hand type
+    - hand_level: Level of current poker hand type
+    - current_chips: Accumulated chips before current joker
+    - current_mult: Accumulated mult before current joker
+    - card: Individual PlayingCard (for per-card events)
+    - played_index: Index of card in played list
+    - consumable: Consumable instance (for consumable_use event)
+    - target_card: Target card for consumables
+    - round_stats: Round summary for economy effects
+    - discarded_cards: Cards discarded in event
+    - is_first_hand: Hand position in round
+    """
+    event: str
+    joker_index: int | None = None
+    scored_cards: list[PlayingCard] | None = None
+    hand_type: str | None = None
+    hand_cards: list[PlayingCard] | None = None
+    played_cards: list[PlayingCard] | None = None
+    contained_hands: set[str] | None = None
+
+
 class Run(DataType):
     """Represents the current game run state."""
-    # Canonical key set for ALL joker/ability event payloads.
-    # Note: run itself is passed explicitly to trigger functions.
-    # Every generated context should include every key here.
-    # Fields not used by a given event must be set to None.
-    ABILITY_CONTEXT_KEYS = (  # those will eventually be pruned if unused
-        "event",  # used
-        "joker",
-        "joker_index",
-        "round_number",
-        "blind_name",
-        "played_cards",
-        "scored_cards",  # used, lighter than deriving from played_cards and scored_map
-        "scored_map",
-        "hand_type",
-        "hand_base_chips",
-        "hand_base_mult",
-        "hand_level",
-        "current_chips",
-        "current_mult",
-        "card",
-        "played_index",
-        "consumable",
-        "target_card",
-        "round_stats",
-        "discarded_cards",
-        "is_first_hand",  # probably current & total hand count instead
-        "hand_cards",
-    )
 
     variables = [
         Variable("deck", Deck),
@@ -108,6 +146,18 @@ class Run(DataType):
         Variable("double_tag_pending", bool, False),
         # Flags for shop modifiers (coupon_active, d6_reroll_active, etc.)
         Variable("pending_tag_effects", dict, default_factory=dict),
+
+        # Shop Guarantees
+        # Pre-populated booster packs that appear first in shop (before RNG)
+        # Format: list of (pack_type, pack_size) tuples, e.g., [("buffoon", "normal")]
+        Variable("first_shop_packs", list, default_factory=list),
+        # Pre-populated jokers with guaranteed editions via tags
+        # Format: list of (joker_id, edition) tuples, e.g., [("The Joker", "foil")]
+        Variable("guaranteed_shop_jokers", list, default_factory=list),
+        # Count of free initial jokers (Rare Tag, Uncommon Tag)
+        Variable("free_joker_count", int, 0),
+        # If true, first cards and booster packs in next shop are free (Coupon Tag)
+        Variable("coupon_tag_active", bool, False),
     ]
 
     # ==========================================================================
@@ -455,124 +505,130 @@ class Run(DataType):
         pass
 
     # ==========================================================================
-    # UNIFORM ABILITY CONTEXT BUILDERS
+    # ABILITY CONTEXT BUILDERS
     # ==========================================================================
-
-    def build_ability_context(self, event: str, **overrides: any) -> dict[str, any]:
-        """
-        Build a canonical joker/ability context dict with a uniform key set.
-
-        This is the single source of truth for ability context structure.
-        All event contexts should be created from this method (or wrappers that
-        delegate to it) so abilities can rely on stable keys across events.
-
-        Contract:
-        - Every key in Run.ABILITY_CONTEXT_KEYS is always present.
-        - Event-inapplicable fields are explicitly None.
-                - The active Run is NOT stored in this dict; pass run explicitly to
-                    trigger functions.
-        - Callers can provide event-specific values via keyword overrides.
-
-        Common usage:
-        - on_hand_score: provide played_cards/scored_cards/scored_map/hand_type/
-          hand_base_chips/hand_base_mult/hand_level/current_chips/current_mult.
-          Use build_scoring_context() which auto-populates hand_level from run.hand_levels.
-        - at_round_end: provide round_number and joker_index; leave scoring lists as None.
-        - on_discard: provide discarded_cards.
-        - on_consumable_use: provide consumable and optional target_card.
-
-        Args:
-            event: Ability event name (for example: "on_hand_score", "at_round_end").
-            **overrides: Event-specific values to override defaults.
-
-        Returns:
-            dict[str, any]: Canonical context dict with all uniform keys present.
-        """
-        context = {key: None for key in self.ABILITY_CONTEXT_KEYS}
-        context["event"] = event
-        context.update(overrides)
-        return context
 
     def build_scoring_context(
         self,
         *,
         joker_index: int | None = None,
-        played_cards: list[PlayingCard] | None = None,
         scored_cards: list[PlayingCard] | None = None,
-        scored_map: dict | None = None,
         hand_type: str | None = None,
-        hand_base_chips: int | None = None,
-        hand_base_mult: float | None = None,
-        current_chips: int | None = None,
-        current_mult: float | None = None,
-    ) -> dict[str, any]:
+        played_cards: list[PlayingCard] | None = None,
+        contained_hands: set[str] | None = None,
+    ) -> AbilityContext:
         """
-        Convenience wrapper for a standard on_hand_score ability context.
+        Build a standard on_hand_score ability context.
 
-        This keeps call sites concise while still enforcing the uniform context
-        schema from build_ability_context().
+        Uses pre-computed contained_hands (provided by evaluate_hand() after
+        calculating it once) to avoid redundant computation during ability
+        evaluation. This allows jokers to check for hand type containment
+        (e.g., "does this flush also contain a pair?") without recalculation.
 
         Args:
             joker_index: Position of the joker currently being evaluated.
-            played_cards: Full played selection before scoring filters.
-            scored_cards: Cards that actually score for this hand.
-            scored_map: Optional precomputed per-card score metadata.
-            hand_type: Detected poker hand identifier (e.g. "flush", "pair").
-            hand_base_chips: Base chip value for this hand type (from score_poker_hand()).
-            hand_base_mult: Base multiplier for this hand type (from score_poker_hand()).
-            current_chips: Chips accumulated before current joker.
-            current_mult: Mult accumulated before current joker.
+            scored_cards: Cards that actually score for this hand (filtered by hand mask).
+            hand_type: Detected poker hand identifier (e.g., "flush", "pair").
+            played_cards: Full list of cards played before filtering by hand mask.
+            contained_hands: Pre-computed set of all hand types in hand_cards.
+                            Provided by evaluate_hand() to avoid recalculation
+                            per joker. If None, no hand types are available.
 
         Returns:
-            dict[str, any]: Canonical context for event="on_hand_score".
+            AbilityContext: Context for event="on_hand_score" with cached contained_hands.
         """
-        return self.build_ability_context(
-            "on_hand_score",
+        return AbilityContext(
+            event="on_hand_score",
             joker_index=joker_index,
-            played_cards=played_cards,
             scored_cards=scored_cards,
-            scored_map=scored_map,
             hand_type=hand_type,
-            hand_base_chips=hand_base_chips,
-            hand_base_mult=hand_base_mult,
-            hand_level=self.hand_levels.get(hand_type) if hand_type else None,
-            current_chips=current_chips,
-            current_mult=current_mult,
             hand_cards=self.hand_cards,
-            round_number=self.round,
+            played_cards=played_cards,
+            contained_hands=contained_hands,
         )
 
     def build_round_end_context(
         self,
         *,
         joker_index: int | None = None,
-        round_stats: dict | None = None,
-    ) -> dict[str, any]:
+    ) -> AbilityContext:
         """
-        Convenience wrapper for a standard at_round_end ability context.
-
-        Non-at_round_end fields are intentionally left as None through the canonical
-        context template so end-of-round triggers share the same key set used by
-        scoring contexts.
+        Build a standard at_round_end ability context.
 
         Args:
             joker_index: Position of the joker currently being evaluated.
-            round_stats: Optional round summary payload for money/economy effects.
 
         Returns:
-            dict[str, any]: Canonical context for event="at_round_end".
+            AbilityContext: Context for event="at_round_end".
         """
-        return self.build_ability_context(
-            "at_round_end",
+        return AbilityContext(
+            event="at_round_end",
             joker_index=joker_index,
-            round_number=self.round,
-            round_stats=round_stats,
             hand_cards=self.hand_cards,
         )
 
     # ==========================================================================
     # QUERY HELPERS (READ-ONLY)
     # ==========================================================================
+
+    @property
+    def virtual_joker_slots(self) -> int:
+        """
+        Get the virtual joker slots accounting for negative jokers.
+
+        Negative jokers don't count toward the joker slot limit, so the effective
+        number of available "slots" is increased by the number of negative jokers
+        currently held.
+
+        Useful for:
+        - Joker Stencil: counts empty joker slots to determine bonus
+        - Other joker effects that reference joker slot capacity
+        - Calculating how many more jokers can be added without eviction
+
+        Returns:
+            int: joker_slots + number of negative jokers currently held.
+        """
+        negative_joker_count = sum(
+            1 for joker in self.jokers if joker.edition == Edition.NEGATIVE
+        )
+        return self.joker_slots + negative_joker_count
+
+    def count_empty_joker_slots(self, include_stencil: bool = False) -> int:
+        """
+        Count the number of empty joker slots available.
+
+        Calculates how many joker slots are currently empty based on the virtual
+        joker slot count (accounting for negative jokers not consuming slots).
+
+        Args:
+            include_stencil: If True, returns the Joker Stencil bonus multiplier
+                            (x1 mult per empty slot) if Joker Stencil is held.
+                            If False, returns the raw empty slot count.
+
+        Returns:
+            int: Number of empty joker slots. If include_stencil=True and Joker
+                 Stencil is held, returns the bonus multiplier (same as empty count
+                 since Stencil is x1 mult per empty slot). If Joker Stencil is not
+                 held, returns raw empty slot count regardless of include_stencil.
+
+        Examples:
+            # 5 slots, 3 jokers held, 0 negative jokers
+            run.count_empty_joker_slots()  # Returns 2
+            run.count_empty_joker_slots(include_stencil=True)  # Returns 2 (or 2xmult if Stencil held)
+
+            # 5 slots, 3 jokers held, 1 negative joker
+            # virtual_joker_slots = 6
+            run.count_empty_joker_slots()  # Returns 3
+            run.count_empty_joker_slots(include_stencil=True)  # Returns 3 (or 3xmult if Stencil held)
+        """
+        empty_slots = self.virtual_joker_slots - len(self.jokers)
+
+        if include_stencil:
+            for joker in self.jokers:
+                if joker.id == "joker_stencil":
+                    empty_slots += 1
+
+        return empty_slots
 
     @property
     def hands_total(self) -> int:

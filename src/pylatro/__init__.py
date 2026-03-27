@@ -1,4 +1,5 @@
-"""Pylatro: A Python implementation of Balatro game mechanics and data structures.
+"""
+Pylatro: A Python implementation of Balatro game mechanics and data structures.
 
 Main package initialization.
 """

@@ -1,5 +1,5 @@
-arcana
-celestial
-standard
-buffoon
-spectral
+arcana 4 2 0.5
+celestial 4 2 0.5
+standard 4 2 0.5
+buffoon 1.2 0.6 0.15
+spectral 0.6 0.3 0.07

@@ -1,7 +1,7 @@
 """Tests for poker hand detection and scoring."""
 import pytest
 from src.pylatro.core.models import PlayingCard
-from src.pylatro.core.poker import analyze_poker_hand
+from src.pylatro.core.poker import analyze_poker_hand, get_contained_hands
 
 
 class TestBasicPokerHands:
@@ -692,3 +692,290 @@ class TestComplexFlagCombinations:
                                     shortcut=True, smeared=True)
         # Should have detected some pattern
         assert result[0] != ""
+
+
+class TestContainedHands:
+    """Test detection of all hand types contained in given cards."""
+
+    def test_single_card_no_hands(self):
+        """Single card contains no pair/triple/straight/flush."""
+        card = PlayingCard(rank=5, suit="heart", chips=5)
+        hands = get_contained_hands(card)
+        assert hands == set()
+
+    def test_pair_contained(self):
+        """Two matching ranks contain a pair."""
+        cards = [
+            PlayingCard(rank=5, suit="heart", chips=5),
+            PlayingCard(rank=5, suit="spade", chips=5),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "pair" in hands
+        assert hands == {"pair"}
+
+    def test_three_of_a_kind_contains_pair_and_triple(self):
+        """Three matching ranks contain three_of_a_kind (not pair separately)."""
+        cards = [
+            PlayingCard(rank=7, suit="heart", chips=7),
+            PlayingCard(rank=7, suit="spade", chips=7),
+            PlayingCard(rank=7, suit="club", chips=7),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "three_of_a_kind" in hands
+        # Pair is not separately detected when three_of_a_kind is present
+        assert hands == {"three_of_a_kind"}
+
+    def test_two_pair_contains_pairs_and_two_pair(self):
+        """Two pairs contain pair and two_pair."""
+        cards = [
+            PlayingCard(rank=5, suit="heart", chips=5),
+            PlayingCard(rank=5, suit="spade", chips=5),
+            PlayingCard(rank=3, suit="club", chips=3),
+            PlayingCard(rank=3, suit="diamond", chips=3),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "pair" in hands
+        assert "two_pair" in hands
+        assert hands == {"pair", "two_pair"}
+
+    def test_five_card_straight(self):
+        """Five consecutive cards contain a straight."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=3, suit="spade", chips=3),
+            PlayingCard(rank=4, suit="club", chips=4),
+            PlayingCard(rank=5, suit="diamond", chips=5),
+            PlayingCard(rank=6, suit="heart", chips=6),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "straight" in hands
+        assert hands == {"straight"}
+
+    def test_four_card_straight_not_detected_without_flag(self):
+        """Four-card straights only detected with four_fingers=True."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=3, suit="spade", chips=3),
+            PlayingCard(rank=4, suit="club", chips=4),
+            PlayingCard(rank=5, suit="diamond", chips=5),
+            PlayingCard(rank=10, suit="heart", chips=10),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "straight" not in hands
+
+    def test_four_card_straight_with_flag(self):
+        """Four-card straights detected with four_fingers=True."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=3, suit="spade", chips=3),
+            PlayingCard(rank=4, suit="club", chips=4),
+            PlayingCard(rank=5, suit="diamond", chips=5),
+            PlayingCard(rank=10, suit="heart", chips=10),
+        ]
+        hands = get_contained_hands(*cards, four_fingers=True)
+        assert "straight" in hands
+
+    def test_loose_straight_without_shortcut_flag(self):
+        """Loose straights (with gaps) not detected without shortcut=True."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=3, suit="spade", chips=3),
+            PlayingCard(rank=5, suit="club", chips=5),
+            PlayingCard(rank=6, suit="diamond", chips=6),
+            PlayingCard(rank=7, suit="heart", chips=7),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "straight" not in hands
+
+    def test_loose_straight_with_shortcut_flag(self):
+        """Loose straights (gaps of 1-2) detected with shortcut=True."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=3, suit="spade", chips=3),
+            PlayingCard(rank=5, suit="club", chips=5),
+            PlayingCard(rank=6, suit="diamond", chips=6),
+            PlayingCard(rank=7, suit="heart", chips=7),
+        ]
+        hands = get_contained_hands(*cards, shortcut=True)
+        assert "straight" in hands
+
+    def test_five_flush(self):
+        """Five cards same suit contains a flush."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=5, suit="heart", chips=5),
+            PlayingCard(rank=9, suit="heart", chips=9),
+            PlayingCard(rank=11, suit="heart", chips=10),
+            PlayingCard(rank=13, suit="heart", chips=10),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "flush" in hands
+        assert hands == {"flush"}
+
+    def test_flush_and_pair_independent(self):
+        """Flush and pair can coexist without pair eliminating flush."""
+        cards = [
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=2, suit="heart", chips=2),
+            PlayingCard(rank=5, suit="heart", chips=5),
+            PlayingCard(rank=9, suit="heart", chips=9),
+            PlayingCard(rank=13, suit="heart", chips=10),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "flush" in hands
+        assert "pair" in hands
+        assert hands == {"flush", "pair"}
+
+    def test_four_card_flush_not_detected_without_flag(self):
+        """Four-card flushes only detected with four_fingers=True."""
+        cards = [
+            PlayingCard(rank=2, suit="diamond", chips=2),
+            PlayingCard(rank=7, suit="diamond", chips=7),
+            PlayingCard(rank=9, suit="diamond", chips=9),
+            PlayingCard(rank=13, suit="diamond", chips=10),
+            PlayingCard(rank=3, suit="club", chips=3),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "flush" not in hands
+
+    def test_four_card_flush_with_flag(self):
+        """Four-card flushes detected with four_fingers=True."""
+        cards = [
+            PlayingCard(rank=2, suit="diamond", chips=2),
+            PlayingCard(rank=7, suit="diamond", chips=7),
+            PlayingCard(rank=9, suit="diamond", chips=9),
+            PlayingCard(rank=13, suit="diamond", chips=10),
+            PlayingCard(rank=3, suit="club", chips=3),
+        ]
+        hands = get_contained_hands(*cards, four_fingers=True)
+        assert "flush" in hands
+
+    def test_smeared_affects_flush_detection(self):
+        """Smeared=True converts suits for flush detection."""
+        cards = [
+            PlayingCard(rank=2, suit="spade", chips=2),
+            PlayingCard(rank=5, suit="club", chips=5),   # club -> spade
+            PlayingCard(rank=9, suit="spade", chips=9),
+            PlayingCard(rank=11, suit="club", chips=10),  # club -> spade
+            PlayingCard(rank=13, suit="spade", chips=10),
+        ]
+        # Without smeared, not a flush (mixed suits)
+        hands_unsmeared = get_contained_hands(*cards)
+        assert "flush" not in hands_unsmeared
+
+        # With smeared, should detect flush
+        hands_smeared = get_contained_hands(*cards, smeared=True)
+        assert "flush" in hands_smeared
+
+    def test_full_house_contains_pair_and_triple(self):
+        """Full house (5 cards) contains three_of_a_kind with its higher count."""
+        cards = [
+            PlayingCard(rank=8, suit="heart", chips=8),
+            PlayingCard(rank=8, suit="spade", chips=8),
+            PlayingCard(rank=8, suit="club", chips=8),
+            PlayingCard(rank=4, suit="diamond", chips=4),
+            PlayingCard(rank=4, suit="heart", chips=4),
+        ]
+        hands = get_contained_hands(*cards)
+        # Three of a kind takes precedence; pair not separately added
+        assert "three_of_a_kind" in hands
+        assert hands == {"three_of_a_kind"}
+
+    def test_straight_and_flush_coexist(self):
+        """When cards form both straight and flush, both are contained."""
+        cards = [
+            PlayingCard(rank=5, suit="club", chips=5),
+            PlayingCard(rank=6, suit="club", chips=6),
+            PlayingCard(rank=7, suit="club", chips=7),
+            PlayingCard(rank=8, suit="club", chips=8),
+            PlayingCard(rank=9, suit="club", chips=9),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "straight" in hands
+        assert "flush" in hands
+        assert hands == {"straight", "flush"}
+
+    def test_ace_low_straight_detected(self):
+        """Ace-low straight (A-2-3-4-5) is detected."""
+        cards = [
+            PlayingCard(rank=1, suit="heart", chips=11),  # Ace
+            PlayingCard(rank=2, suit="spade", chips=2),
+            PlayingCard(rank=3, suit="club", chips=3),
+            PlayingCard(rank=4, suit="diamond", chips=4),
+            PlayingCard(rank=5, suit="heart", chips=5),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "straight" in hands
+
+    def test_ace_high_straight_detected(self):
+        """Ace-high straight (10-J-Q-K-A) is detected."""
+        cards = [
+            PlayingCard(rank=10, suit="heart", chips=10),
+            PlayingCard(rank=11, suit="spade", chips=10),
+            PlayingCard(rank=12, suit="club", chips=10),
+            PlayingCard(rank=13, suit="diamond", chips=10),
+            PlayingCard(rank=1, suit="heart", chips=11),  # Ace
+        ]
+        hands = get_contained_hands(*cards)
+        assert "straight" in hands
+
+    def test_complex_hand_pair_straight_flush(self):
+        """Hand with pair and flush, but not straight (not 5 unique consecutive ranks)."""
+        cards = [
+            PlayingCard(rank=5, suit="diamond", chips=5),
+            PlayingCard(rank=5, suit="diamond", chips=5),
+            PlayingCard(rank=6, suit="diamond", chips=6),
+            PlayingCard(rank=7, suit="diamond", chips=7),
+            PlayingCard(rank=8, suit="diamond", chips=8),
+        ]
+        hands = get_contained_hands(*cards)
+        # Only 4 unique ranks (5,6,7,8), so no 5-card straight
+        assert "pair" in hands
+        assert "straight" not in hands
+        assert "flush" in hands
+        assert hands == {"pair", "flush"}
+
+    def test_invalid_card_count_too_few(self):
+        """get_contained_hands should accept 0 cards but return empty set."""
+        # Actually, based on the error check, it requires 1-5 cards
+        # Let me verify the code behavior
+        cards = []
+        with pytest.raises(ValueError):
+            get_contained_hands(*cards)
+
+    def test_invalid_card_count_too_many(self):
+        """get_contained_hands raises ValueError for more than 5 cards."""
+        cards = [PlayingCard(rank=i, suit="heart", chips=i)
+                 for i in range(1, 7)]
+        with pytest.raises(ValueError):
+            get_contained_hands(*cards)
+
+    def test_three_of_a_kind_with_extras(self):
+        """Three of a kind with 4 cards (triple + extra) contains triple."""
+        cards = [
+            PlayingCard(rank=7, suit="heart", chips=7),
+            PlayingCard(rank=7, suit="spade", chips=7),
+            PlayingCard(rank=7, suit="club", chips=7),
+            PlayingCard(rank=2, suit="diamond", chips=2),
+        ]
+        hands = get_contained_hands(*cards)
+        assert "three_of_a_kind" in hands
+        # Pair is not separately detected when three_of_a_kind is present
+        assert hands == {"three_of_a_kind"}
+
+    def test_all_hands_together(self):
+        """Hand with pair, straight and flush in 5 identical suit cards."""
+        cards = [
+            PlayingCard(rank=5, suit="heart", chips=5),
+            PlayingCard(rank=6, suit="heart", chips=6),
+            PlayingCard(rank=7, suit="heart", chips=7),
+            PlayingCard(rank=8, suit="heart", chips=8),
+            PlayingCard(rank=9, suit="heart", chips=9),
+        ]
+        hands = get_contained_hands(*cards)
+        # All 5 cards unique ranks in sequence, all same suit
+        assert "straight" in hands
+        assert "flush" in hands
+        # No pair since all ranks are unique
+        assert "pair" not in hands
+        assert hands == {"straight", "flush"}

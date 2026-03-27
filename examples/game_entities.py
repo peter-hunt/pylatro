@@ -1,4 +1,5 @@
-"""Example: Creating and Using Game Entities
+"""
+Example: Creating and Using Game Entities
 
 Demonstrates how to work with Pylatro's game entity models:
 - Creating cards with enhancements, seals, editions

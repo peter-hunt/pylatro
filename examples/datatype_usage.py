@@ -1,4 +1,5 @@
-"""Example: DataType Framework Basics
+"""
+Example: DataType Framework Basics
 
 Demonstrates core features of the DataType framework:
 - Creating type-safe data structures

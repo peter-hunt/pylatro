@@ -1,5 +1,5 @@
 from re import Match, compile as re_compile, VERBOSE
-from typing import Callable
+from typing import Any, Callable
 
 
 __all__ = [
@@ -132,7 +132,7 @@ class CommandPattern:
         self.pattern_str = pattern_str
         self.parts = parse_command(pattern_str)
 
-    def match(self, tokens: list[str]) -> dict[str: any] | None:
+    def match(self, tokens: list[str]) -> dict[str: Any] | None:
         idx = 0
         parsed = {}
 

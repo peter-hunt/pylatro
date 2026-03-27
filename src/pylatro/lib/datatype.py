@@ -1,4 +1,5 @@
-"""Generic DataType Framework for Type-Safe Data Models
+"""
+Generic DataType Framework for Type-Safe Data Models
 
 This module provides a lightweight type system for defining structured data objects
 with optional fields, validation, custom serialization, and JSON compatibility.
@@ -49,7 +50,8 @@ Immutable = int | float | complex | bool | str | tuple | bytes | range | frozens
 
 
 class Variable:
-    """Descriptor for a single typed field within a DataType.
+    """
+    Descriptor for a single typed field within a DataType.
 
     Defines a named field with type information, optional defaults, validation,
     and custom serialization logic. Used by DataType subclasses to define their structure.
@@ -78,7 +80,8 @@ class Variable:
                  validator: Callable[[Any], bool] | None = None,
                  loader: Callable[[Any], Any] | None = None,
                  dumper: Callable[[Any], Any] | None = None):
-        """Initialize a Variable field descriptor.
+        """
+        Initialize a Variable field descriptor.
 
         Args:
             name: Field name (alphanumeric and underscores only)
@@ -125,7 +128,8 @@ class Variable:
 
     @property
     def default_value(self):
-        """Get the default value for this variable.
+        """
+        Get the default value for this variable.
 
         Returns:
             The default value (from default or default_factory).
@@ -141,8 +145,9 @@ class Variable:
             raise ValueError(f"default value not provided"
                              f" for variable {self.name!r}")
 
-    def load(self, value: any, /):
-        """Deserialize a value from storage format.
+    def load(self, value: Any, /):
+        """
+        Deserialize a value from storage format.
 
         Args:
             value: Value from storage (dict, JSON, etc.)
@@ -152,8 +157,9 @@ class Variable:
         """
         return value if self.loader is None else self.loader(value)
 
-    def dump(self, value: any, /):
-        """Serialize a value to storage format.
+    def dump(self, value: Any, /):
+        """
+        Serialize a value to storage format.
 
         Args:
             value: Value to serialize
@@ -163,8 +169,9 @@ class Variable:
         """
         return value if self.dumper is None else self.dumper(value)
 
-    def validate(self, value: any, /):
-        """Validate a value against this variable's validator (if any).
+    def validate(self, value: Any, /):
+        """
+        Validate a value against this variable's validator (if any).
 
         Args:
             value: Value to validate
@@ -176,7 +183,8 @@ class Variable:
 
 
 def get_var(variables: list[Variable], name: str, /) -> Variable | None:
-    """Find a Variable by name in a list.
+    """
+    Find a Variable by name in a list.
 
     Utility function to search for a Variable descriptor by name.
 
@@ -193,7 +201,8 @@ def get_var(variables: list[Variable], name: str, /) -> Variable | None:
 
 
 class DataType:
-    """Base class for creating strongly-typed data models.
+    """
+    Base class for creating strongly-typed data models.
 
     Subclass DataType to define structured data with type checking, validation,
     and automatic JSON serialization/deserialization.
@@ -226,14 +235,18 @@ class DataType:
     DUMP_DEFAULTS: bool = True
 
     def __init_subclass__(cls):
-        """Validate and initialize a DataType subclass.
+        """
+        Validate and initialize a DataType subclass.
 
         Called automatically when a subclass is defined. Validates that:
-        - The class defines a 'variables' attribute
+        - The class inherits or defines a 'variables' attribute
         - All items in variables are Variable instances
         - Variable names don't conflict with reserved names
         - Optional fields come after required fields
         - Mutable defaults use default_factory, not default
+
+        Supports inheritance: subclasses can inherit variables from parent
+        DataType classes without needing to redefine them.
 
         Raises:
             TypeError: If validation fails
@@ -242,9 +255,17 @@ class DataType:
         """
         if "datatype_id" not in cls.__dict__:
             cls.datatype_id = to_snake_case(cls.__name__)
+
+        # Allow variables to be inherited from parent classes
         if "variables" not in cls.__dict__:
-            raise TypeError(
-                f"{cls.__name__} must define class attribute 'variables'")
+            # Check if any parent class has variables
+            for base in cls.__mro__[1:]:
+                if hasattr(base, 'variables') and isinstance(base.variables, list):
+                    cls.variables = base.variables
+                    break
+            else:
+                raise TypeError(
+                    f"{cls.__name__} must define or inherit class attribute 'variables'")
         variables = cls.variables
         for var in variables:
             if not isinstance(var, Variable):
@@ -273,7 +294,8 @@ class DataType:
                     f" default_factory instead of default: {var.name}")
 
     def __init__(self, *args, **kwargs):
-        """Initialize a DataType instance with field values.
+        """
+        Initialize a DataType instance with field values.
 
         Accepts positional or keyword arguments matching the variables list.
         Validates all values against their Variable definitions.
@@ -342,7 +364,8 @@ class DataType:
                 setattr(self, var.name, var.default_value)
 
     def __repr__(self):
-        """Return detailed string representation showing all field values."""
+        """
+        Return detailed string representation showing all field values."""
         result = f"{self.__class__.__name__}("
         result += ", ".join(
             f"{var.name}={getattr(self, var.name)!r}"
@@ -351,7 +374,8 @@ class DataType:
         return result + ')'
 
     def __str__(self):
-        """Return simple string representation with values only."""
+        """
+        Return simple string representation with values only."""
         result = f"{self.__class__.__name__}("
         result += ", ".join(
             f"{getattr(self, var.name)!r}"
@@ -360,7 +384,8 @@ class DataType:
         return result + ')'
 
     def dumps(self):
-        """Serialize this instance to a dictionary.
+        """
+        Serialize this instance to a dictionary.
 
         Converts all fields to their serialized form using dumper functions
         (if defined). Includes a 'type' field with the datatype_id.
@@ -380,7 +405,8 @@ class DataType:
         return result
 
     def dump(self, file: TextIOWrapper, /):
-        """Serialize this instance to a JSON file.
+        """
+        Serialize this instance to a JSON file.
 
         Args:
             file: Open file object to write JSON to.
@@ -389,7 +415,8 @@ class DataType:
 
     @classmethod
     def loads(cls, obj: dict[str, any], /):
-        """Deserialize an instance from a dictionary.
+        """
+        Deserialize an instance from a dictionary.
 
         Creates a new instance from serialized data, converting each field
         using its loader function (if defined). Validates type tag matches.
@@ -421,7 +448,8 @@ class DataType:
 
     @classmethod
     def load(cls, file: TextIOWrapper, /):
-        """Deserialize an instance from a JSON file.
+        """
+        Deserialize an instance from a JSON file.
 
         Args:
             file: Open file object to read JSON from.
@@ -433,7 +461,8 @@ class DataType:
 
     @classmethod
     def is_valid(cls, obj: dict[str, any]):
-        """Check if a dictionary represents a valid instance of this type.
+        """
+        Check if a dictionary represents a valid instance of this type.
 
         Validates structure, type tag, required fields, and types without
         raising exceptions. Useful for pre-validation before loading.
@@ -467,7 +496,8 @@ class DataType:
 
 
 def main():
-    """Example usage demonstration.
+    """
+    Example usage demonstration.
 
     Creates and manipulates DataType instances to show typical usage patterns.
     """

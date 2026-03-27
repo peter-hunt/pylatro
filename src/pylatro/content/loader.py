@@ -112,12 +112,25 @@ def load_modifiers():
 
 
 def load_booster_packs():
-    """Load booster pack names."""
+    """Load booster pack names and weights (normal, jumbo, mega)."""
     booster_packs = []
+    booster_pack_weights = {}
+
     with open(_get_content_dir() / "booster_packs.txt") as file:
         for line in file.read().strip().split('\n'):
-            booster_packs.append(line)
-    return booster_packs
+            parts = line.split()
+            pack_name = parts[0]
+            normal, jumbo, mega = float(parts[1]), float(
+                parts[2]), float(parts[3])
+
+            booster_packs.append(pack_name)
+            booster_pack_weights[pack_name] = {
+                "normal": normal,
+                "jumbo": jumbo,
+                "mega": mega
+            }
+
+    return booster_packs, booster_pack_weights
 
 
 def load_tags():

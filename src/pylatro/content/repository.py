@@ -121,8 +121,15 @@ def get_stickers():
 def get_booster_packs():
     """Get list of all booster pack names."""
     if "booster_packs" not in _cache:
-        _cache["booster_packs"] = load_booster_packs()
+        _cache["booster_packs"], _cache["booster_pack_weights"] = load_booster_packs()
     return _cache["booster_packs"]
+
+
+def get_booster_pack_weights():
+    """Get dict mapping booster pack names to {normal, jumbo, mega} weights."""
+    if "booster_pack_weights" not in _cache:
+        _cache["booster_packs"], _cache["booster_pack_weights"] = load_booster_packs()
+    return _cache["booster_pack_weights"]
 
 
 def get_tags():

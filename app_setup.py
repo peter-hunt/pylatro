@@ -1,4 +1,5 @@
-"""Application initialization and setup.
+"""
+Application initialization and setup.
 
 Handles startup tasks for Pylatro:
 - Loading application state and settings
@@ -42,7 +43,8 @@ _profile_manager = None
 
 
 def get_profile_manager() -> ProfileManager:
-    """Get the global profile manager instance.
+    """
+    Get the global profile manager instance.
 
     Returns:
         ProfileManager: Profile manager initialized with PROFILES_DIR.
@@ -54,7 +56,8 @@ def get_profile_manager() -> ProfileManager:
 
 
 def init_directories():
-    """Create required directories if they don't exist.
+    """
+    Create required directories if they don't exist.
 
     Creates:
     - saves/ — Game save files
@@ -74,7 +77,8 @@ def init_directories():
 
 
 def init_app_state():
-    """Load or initialize application state.
+    """
+    Load or initialize application state.
 
     Loads existing app state from saves/app_state.json, or creates
     a new one with default settings if the file doesn't exist.
@@ -100,7 +104,8 @@ def init_app_state():
 
 
 def check_profile_exists(profile_name: str) -> bool:
-    """Check if a player profile exists.
+    """
+    Check if a player profile exists.
 
     Args:
         profile_name: Name of the profile to check.
@@ -112,7 +117,8 @@ def check_profile_exists(profile_name: str) -> bool:
 
 
 def load_profile(profile_name: str) -> dict | None:
-    """Load a player profile by name.
+    """
+    Load a player profile by name.
 
     Args:
         profile_name: Name of the profile to load.
@@ -124,7 +130,8 @@ def load_profile(profile_name: str) -> dict | None:
 
 
 def create_profile(profile_name: str) -> bool:
-    """Create a new player profile with default values.
+    """
+    Create a new player profile with default values.
 
     Args:
         profile_name: Name for the new profile.
@@ -136,7 +143,8 @@ def create_profile(profile_name: str) -> bool:
 
 
 def save_profile(profile_name: str, profile_data: dict) -> bool:
-    """Save a profile to disk.
+    """
+    Save a profile to disk.
 
     Args:
         profile_name: Name of the profile.
@@ -149,7 +157,8 @@ def save_profile(profile_name: str, profile_data: dict) -> bool:
 
 
 def delete_profile(profile_name: str) -> bool:
-    """Delete a player profile.
+    """
+    Delete a player profile.
 
     Args:
         profile_name: Name of the profile to delete.
@@ -161,7 +170,8 @@ def delete_profile(profile_name: str) -> bool:
 
 
 def rename_profile(old_name: str, new_name: str) -> bool:
-    """Rename a player profile.
+    """
+    Rename a player profile.
 
     Args:
         old_name: Current profile name.
@@ -174,7 +184,8 @@ def rename_profile(old_name: str, new_name: str) -> bool:
 
 
 def reset_profile(profile_name: str) -> bool:
-    """Reset a profile's stats to default values (but keep unlocks).
+    """
+    Reset a profile's stats to default values (but keep unlocks).
 
     Args:
         profile_name: Name of the profile to reset.
@@ -186,7 +197,8 @@ def reset_profile(profile_name: str) -> bool:
 
 
 def unlock_all(profile_name: str) -> bool:
-    """Unlock all jokers and decks for a profile.
+    """
+    Unlock all jokers and decks for a profile.
 
     Args:
         profile_name: Name of the profile.
@@ -198,7 +210,8 @@ def unlock_all(profile_name: str) -> bool:
 
 
 def list_profiles() -> list[str]:
-    """List all existing player profiles.
+    """
+    List all existing player profiles.
 
     Returns:
         list[str]: List of profile names (without .json extension).
@@ -207,7 +220,8 @@ def list_profiles() -> list[str]:
 
 
 def get_app_settings() -> dict:
-    """Get current application settings.
+    """
+    Get current application settings.
 
     Loads app state and returns user-facing settings like:
     - game_speed
@@ -234,7 +248,8 @@ def get_app_settings() -> dict:
 
 
 def update_app_setting(key: str, value: any) -> bool:
-    """Update an application setting.
+    """
+    Update an application setting.
 
     Args:
         key: Setting key (e.g., "game_speed", "animations_enabled")
@@ -260,7 +275,8 @@ def update_app_setting(key: str, value: any) -> bool:
 
 
 def verify_game_data() -> bool:
-    """Verify that game data files exist and are accessible.
+    """
+    Verify that game data files exist and are accessible.
 
     Checks for required data directories and files:
     - content/data/jokers.txt
@@ -301,7 +317,8 @@ def verify_game_data() -> bool:
 
 
 def init_application() -> bool:
-    """Initialize the application (master initialization function).
+    """
+    Initialize the application (master initialization function).
 
     Performs all startup tasks in order:
     1. Creates required directories

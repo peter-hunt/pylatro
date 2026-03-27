@@ -1,4 +1,5 @@
-"""Example scripts demonstrating Pylatro library usage and patterns.
+"""
+Example scripts demonstrating Pylatro library usage and patterns.
 
 This directory contains standalone examples showing how to use core Pylatro
 utilities, especially the DataType framework and game data structures.

@@ -158,7 +158,6 @@ class CLIRenderer:
         Render stake progress indicators with colors.
         ● = beaten (green), ◐ = discovered (yellow), ○ = locked (grey)
         """
-        from rich.style import Style
 
         beaten_str = "● " * beaten if beaten > 0 else ""
         discovered_str = "◐ " * discovered if discovered > 0 else ""

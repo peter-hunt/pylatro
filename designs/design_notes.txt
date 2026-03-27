@@ -9,3 +9,7 @@ Free items can be bought even when money is negative
 
 Discovering legendary joker triggers unlock sequence
 Swashbuckler is affected by Clearance Sale
+Face down gold cards still triggered
+Mime also triggers gold card
+Rocket is upgraded before boss checkout
+The Mouth disables DNA

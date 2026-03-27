@@ -38,7 +38,7 @@ pareidolia uncommon 5
 gros_michel common 5
 even_steven common 4
 odd_todd common 4
-sholar common 4
+scholar common 4
 business_card common 4
 supernova common 5
 ride_the_bus common 6

@@ -1,5 +1,7 @@
 All kinds of card drawing
 
+Boss Blind Selection
+
 Erratic Deck: generation
 
 Shop and Rerolls

@@ -1,5 +1,6 @@
 """Hand and card evaluation logic for Balatro gameplay."""
 from pylatro.core.models import PlayingCard, Joker
+from pylatro.core.poker import analyze_poker_hand, get_contained_hands
 from pylatro.core.run import Run
 
 
@@ -288,4 +289,50 @@ def evaluate_hand(
           final_mult = 2.0 * 3.0 = 6.0
           total_chips = 20 * 6.0 = 120
     """
-    pass
+
+    # ==========================================================================
+    # STEP 1-3: CALCULATE CARD CHIPS/MULT, BASE HAND, APPLY EDITIONS
+    # ==========================================================================
+    # TODO: Implement card-level chip/mult calculations and edition modifiers
+
+    # Get poker hand base chips/mult
+    hand_base_chips, hand_base_mult = score_poker_hand(hand_type)
+
+    # ==========================================================================
+    # CRITICAL: COMPUTE JOKER MODIFIER FLAGS ONCE FOR REUSE
+    # ==========================================================================
+    # These flags are needed for both analyze_poker_hand() confirmation and
+    # get_contained_hands() caching. Compute once here to avoid redundant checks.
+    four_fingers = run.has_joker("four_fingers")
+    shortcut = run.has_joker("shortcut")
+    smeared = run.has_joker("smeared_joker")
+
+    # Verify/recalculate the detected hand type with actual joker modifiers
+    detected_hand, scored_card_mask = analyze_poker_hand(
+        *played_cards,
+        four_fingers=four_fingers,
+        shortcut=shortcut,
+        smeared=smeared,
+    )
+
+    # Filter played_cards to only those that contribute to the detected hand
+    scored_cards = [
+        card for card, contributes in zip(played_cards, scored_card_mask)
+        if contributes
+    ]
+
+    # Pre-compute all hand types contained in the full hand
+    # This is cached and reused for all joker ability triggers
+    contained_hands = get_contained_hands(
+        *run.hand_cards,
+        four_fingers=four_fingers,
+        shortcut=shortcut,
+        smeared=smeared,
+    ) if hand_type else None
+
+    # ==========================================================================
+    # STEP 4: BUILD ABILITY CONTEXT & TRIGGER JOKER ABILITIES
+    # ==========================================================================
+    # Joker abilities now receive pre-computed contained_hands and full played_cards
+    # (See updated build_scoring_context() signature below)
+    # TODO: Implement joker ability triggering using the cached contained_hands

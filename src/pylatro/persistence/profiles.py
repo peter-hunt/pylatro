@@ -4,7 +4,7 @@ import json
 import logging
 
 from pylatro.lib.datatype import DataType, Variable
-from pylatro.content import get_jokers, get_decks, get_poker_hands
+from pylatro.content import get_jokers, get_decks
 
 
 logger = logging.getLogger(__name__)
@@ -107,7 +107,8 @@ class ProfileManager:
     """Manages player profile persistence and operations."""
 
     def __init__(self, profiles_dir: Path):
-        """Initialize the profile manager.
+        """
+        Initialize the profile manager.
 
         Args:
             profiles_dir: Path to the profiles directory.
@@ -116,7 +117,8 @@ class ProfileManager:
         self.profiles_dir.mkdir(parents=True, exist_ok=True)
 
     def exists(self, profile_name: str) -> bool:
-        """Check if a profile exists.
+        """
+        Check if a profile exists.
 
         Args:
             profile_name: Name of the profile.
@@ -128,7 +130,8 @@ class ProfileManager:
         return profile_path.exists()
 
     def load(self, profile_name: str) -> dict | None:
-        """Load a profile from disk.
+        """
+        Load a profile from disk.
 
         Args:
             profile_name: Name of the profile.
@@ -152,7 +155,8 @@ class ProfileManager:
             return None
 
     def save(self, profile_name: str, profile_data: dict) -> bool:
-        """Save a profile to disk.
+        """
+        Save a profile to disk.
 
         Args:
             profile_name: Name of the profile.
@@ -172,7 +176,8 @@ class ProfileManager:
             return False
 
     def create(self, profile_name: str) -> bool:
-        """Create a new profile with default values.
+        """
+        Create a new profile with default values.
 
         Args:
             profile_name: Name for the new profile.
@@ -196,7 +201,8 @@ class ProfileManager:
             return False
 
     def delete(self, profile_name: str) -> bool:
-        """Delete a profile.
+        """
+        Delete a profile.
 
         Args:
             profile_name: Name of the profile to delete.
@@ -219,7 +225,8 @@ class ProfileManager:
             return False
 
     def rename(self, old_name: str, new_name: str) -> bool:
-        """Rename a profile.
+        """
+        Rename a profile.
 
         Args:
             old_name: Current profile name.
@@ -254,7 +261,8 @@ class ProfileManager:
             return False
 
     def reset(self, profile_name: str) -> bool:
-        """Reset a profile's stats to defaults (keep unlocks).
+        """
+        Reset a profile's stats to defaults (keep unlocks).
 
         Args:
             profile_name: Name of the profile to reset.
@@ -278,7 +286,8 @@ class ProfileManager:
             return False
 
     def unlock_all(self, profile_name: str) -> bool:
-        """Unlock all jokers and decks for a profile.
+        """
+        Unlock all jokers and decks for a profile.
 
         Args:
             profile_name: Name of the profile.
@@ -310,7 +319,8 @@ class ProfileManager:
             return False
 
     def list_all(self) -> list[str]:
-        """List all profiles.
+        """
+        List all profiles.
 
         Returns:
             list[str]: Sorted list of profile names.
